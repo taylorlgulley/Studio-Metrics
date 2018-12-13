@@ -142,6 +142,182 @@ namespace StudioMetrics.Data
                 }
             );
 
+            modelBuilder.Entity<Artist>().HasData(
+                new Artist()
+                {
+                    ArtistId = 1,
+                    UserId = user.Id,
+                    Name = "Smashing Pumpkins"
+                },
+                new Artist()
+                {
+                    ArtistId = 2,
+                    UserId = user.Id,
+                    Name = "Lake Street Dive"
+                },
+                new Artist()
+                {
+                    ArtistId = 3,
+                    UserId = user.Id,
+                    Name = "Barns Courtney"
+                },
+                new Artist()
+                {
+                    ArtistId = 4,
+                    UserId = user.Id,
+                    Name = "The Pink Spiders"
+                }
+            );
+
+            modelBuilder.Entity<Client>().HasData(
+                new Client()
+                {
+                    ClientId = 1,
+                    UserId = user.Id,
+                    Name = "Mark Hale",
+                    Phone = "615-111-1111",
+                    Email = "mhaleindustries@mhale.com"
+                },
+                new Client()
+                {
+                    ClientId = 2,
+                    UserId = user.Id,
+                    Name = "David Cunningham",
+                    Phone = "615-222-2222",
+                    Email = "dcunningham@dcunningham.com"
+                },
+                new Client()
+                {
+                    ClientId = 3,
+                    UserId = user.Id,
+                    Name = "Michelle An",
+                    Phone = "615-333-3333",
+                    Email = "mansound@sound.com"
+                }
+            );
+
+            modelBuilder.Entity<Player>().HasData(
+                new Player()
+                {
+                    PlayerId = 1,
+                    UserId = user.Id,
+                    FirstName = "Abe",
+                    LastName = "Laboriel Jr.",
+                    Instrument = "Drums",
+                    Phone = "999-999-9999",
+                    Email = "abelaboriel@paulmcaartney.com"
+                },
+                new Player()
+                {
+                    PlayerId = 2,
+                    UserId = user.Id,
+                    FirstName = "Paul",
+                    LastName = "McCartney",
+                    Instrument = "Vocals",
+                    Phone = "999-999-9999",
+                    Email = "paul@paulmccartney.com"
+                },
+                new Player()
+                {
+                    PlayerId = 3,
+                    UserId = user.Id,
+                    FirstName = "Jimmy",
+                    LastName = "Hendrix",
+                    Instrument = "Guitar",
+                    Phone = "999-999-9999",
+                    Email = "jhendrix@jhendrix.com"
+                },
+                new Player()
+                {
+                    PlayerId = 4,
+                    UserId = user.Id,
+                    FirstName = "Stevie",
+                    LastName = "Wonder",
+                    Instrument = "Keyboards",
+                    Phone = "999-999-9999",
+                    Email = "swonder@swonder.com"
+                }
+            );
+
+            modelBuilder.Entity<Project>().HasData(
+                new Project()
+                {
+                    ProjectId = 1,
+                    Title = "Hey Jude",
+                    ProjectTypeId = 1,
+                    Description = "An hit in the making",
+                    Payrate = 2500,
+                    TimeTable = 5,
+                    StartDate = new DateTime(2018, 12, 28),
+                    StatusTypeId = 1,
+                    UserId = user.Id,
+                    ClientId = 1
+                },
+                new Project()
+                {
+                    ProjectId = 2,
+                    Title = "Free Yourself Up",
+                    ProjectTypeId = 3,
+                    Description = "A great album",
+                    Payrate = 1500,
+                    TimeTable = 25,
+                    StartDate = new DateTime(2018, 11, 04),
+                    StatusTypeId = 2,
+                    UserId = user.Id,
+                    ClientId = 3
+                }
+            );
+
+            modelBuilder.Entity<PlayerProject>().HasData(
+                new PlayerProject()
+                {
+                    PlayerProjectId = 1,
+                    PlayerId = 2,
+                    ProjectId = 1
+                },
+                new PlayerProject()
+                {
+                    PlayerProjectId = 2,
+                    PlayerId = 1,
+                    ProjectId = 1
+                },
+                new PlayerProject()
+                {
+                    PlayerProjectId = 3,
+                    PlayerId = 4,
+                    ProjectId = 2
+                }
+            );
+
+            modelBuilder.Entity<ClientArtist>().HasData(
+                new ClientArtist()
+                {
+                    ClientArtistId = 1,
+                    ClientId = 1,
+                    ArtistId = 1
+                },
+                new ClientArtist()
+                {
+                    ClientArtistId = 2,
+                    ClientId = 3,
+                    ArtistId = 2
+                }
+            );
+
+            modelBuilder.Entity<ArtistProject>().HasData(
+                new ArtistProject()
+                {
+                    ArtistProjectId = 1,
+                    ArtistId = 1,
+                    ProjectId = 1
+                },
+                new ArtistProject()
+                {
+                    ArtistProjectId = 2,
+                    ArtistId = 2,
+                    ProjectId = 2
+                }
+            );
         }
     }
 }
