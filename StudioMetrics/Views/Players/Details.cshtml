@@ -41,10 +41,16 @@
             @Html.DisplayFor(model => model.Email)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.User)
+            Projects they played on
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.User.Id)
+            <ul>
+                @*Loop over the each PlayerProject and show the Title for the associated project*@
+             @foreach (PlayerProject p in Model.PlayerProjects)
+             {
+                <il>@p.Project.Title</il>
+             }
+            </ul>
         </dd>
     </dl>
 </div>
