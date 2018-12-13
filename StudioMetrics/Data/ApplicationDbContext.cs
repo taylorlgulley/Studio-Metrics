@@ -61,6 +61,11 @@ namespace StudioMetrics.Data
                 .WithOne(l => l.Client)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.Projects)
+                .WithOne(l => l.User)
+                .OnDelete(DeleteBehavior.Restrict);
+
             ApplicationUser user = new ApplicationUser
             {
                 CompanyName = "admin",
