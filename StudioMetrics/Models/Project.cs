@@ -27,7 +27,7 @@ namespace StudioMetrics.Models
 
         [Required]
         [DisplayFormat(DataFormatString = "{0:C}")]
-        [Range(1, double.MaxValue, ErrorMessage = "Please choose a Payrate")]
+        [Range(0, double.MaxValue, ErrorMessage = "Please choose a Payrate")]
         public double Payrate { get; set; }
 
         [Required]

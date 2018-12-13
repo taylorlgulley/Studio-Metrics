@@ -80,16 +80,68 @@ namespace StudioMetrics.Data
                 new ProjectType()
                 {
                     ProjectTypeId = 1,
-                    Type = "Song"
+                    Type = "Single Song Release"
                 },
                 new ProjectType()
                 {
                     ProjectTypeId = 2,
-                    Type = "Album"
+                    Type = "Extended Play CD"
+                },
+                new ProjectType()
+                {
+                    ProjectTypeId = 3,
+                    Type = "Full Length CD"
+                },
+                new ProjectType()
+                {
+                    ProjectTypeId = 4,
+                    Type = "Single Song Demo"
+                },
+                new ProjectType()
+                {
+                    ProjectTypeId = 5,
+                    Type = "30 Second Audio Commercial"
+                },
+                new ProjectType()
+                {
+                    ProjectTypeId = 6,
+                    Type = "60 Second Audio Commercial"
+                },
+                new ProjectType()
+                {
+                    ProjectTypeId = 7,
+                    Type = "Audio Industrial"
+                },
+                new ProjectType()
+                {
+                    ProjectTypeId = 8,
+                    Type = "Live Concert Recording"
+                }
+            );
+
+            modelBuilder.Entity<StatusType>().HasData(
+                new StatusType()
+                {
+                    StatusTypeId = 1,
+                    Type = "Upcoming"
+                },
+                new StatusType()
+                {
+                    StatusTypeId = 2,
+                    Type = "Completed"
+                },
+                new StatusType()
+                {
+                    StatusTypeId = 3,
+                    Type = "Current"
+                },
+                new StatusType()
+                {
+                    StatusTypeId = 4,
+                    Type = "Tentative"
                 }
             );
 
         }
-
-        }
+    }
 }
