@@ -17,6 +17,18 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt>
+            Their Clients
+        </dt>
+        <dd>
+            <ul>
+                @*Loop over the each ArtistProject and show the Title for the associated project*@
+                @foreach (ClientArtist ca in Model.ClientArtists)
+                {
+                    <il>@ca.Client.Name</il>
+                }
+            </ul>
+        </dd>
+        <dt>
             Their Projects
         </dt>
         <dd>

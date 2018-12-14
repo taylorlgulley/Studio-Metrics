@@ -43,6 +43,8 @@ namespace StudioMetrics.Controllers
                 .Include(a => a.User)
                 .Include(a => a.ArtistProjects)
                     .ThenInclude(ap => ap.Project)
+                .Include(a => a.ClientArtists)
+                    .ThenInclude(ca => ca.Client)
                 .FirstOrDefaultAsync(m => m.ArtistId == id);
             if (artist == null)
             {

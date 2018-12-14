@@ -41,6 +41,9 @@ namespace StudioMetrics.Controllers
 
             var client = await _context.Client
                 .Include(c => c.User)
+                .Include(c => c.Projects)
+                .Include(c => c.ClientArtists)
+                    .ThenInclude(ca => ca.Artist)
                 .FirstOrDefaultAsync(m => m.ClientId == id);
             if (client == null)
             {
@@ -53,7 +56,6 @@ namespace StudioMetrics.Controllers
         // GET: Clients/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
         }
 
@@ -64,13 +66,16 @@ namespace StudioMetrics.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ClientId,Name,Phone,Email,UserId")] Client client)
         {
+            ModelState.Remove("User");
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
+                client.User = await GetCurrentUserAsync();
+                client.UserId = client.User.Id;
                 _context.Add(client);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", client.UserId);
             return View(client);
         }
 
@@ -87,7 +92,6 @@ namespace StudioMetrics.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", client.UserId);
             return View(client);
         }
 
@@ -103,10 +107,14 @@ namespace StudioMetrics.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove("User");
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 try
                 {
+                    client.User = await GetCurrentUserAsync();
+                    client.UserId = client.User.Id;
                     _context.Update(client);
                     await _context.SaveChangesAsync();
                 }
@@ -123,7 +131,6 @@ namespace StudioMetrics.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", client.UserId);
             return View(client);
         }
 
@@ -151,9 +158,20 @@ namespace StudioMetrics.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var client = await _context.Client.FindAsync(id);
+            Client client = await _context.Client
+                .Include(c => c.ClientArtists)
+                .SingleOrDefaultAsync(c => c.ClientId == id);
+            //.FindAsync(id);
+
+            foreach (ClientArtist ca in client.ClientArtists)
+            {
+                _context.ClientArtist.Remove(ca);
+            }
+
             _context.Client.Remove(client);
+
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
