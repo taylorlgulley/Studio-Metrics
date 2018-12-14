@@ -57,7 +57,6 @@ namespace StudioMetrics.Controllers
         // GET: Players/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
         }
 
@@ -68,13 +67,16 @@ namespace StudioMetrics.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PlayerId,FirstName,LastName,Instrument,Phone,Email,UserId")] Player player)
         {
+            ModelState.Remove("User");
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
+                player.User = await GetCurrentUserAsync();
+                player.UserId = player.User.Id;
                 _context.Add(player);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", player.UserId);
             return View(player);
         }
 
@@ -91,7 +93,6 @@ namespace StudioMetrics.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", player.UserId);
             return View(player);
         }
 
@@ -107,10 +108,14 @@ namespace StudioMetrics.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove("User");
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 try
                 {
+                    player.User = await GetCurrentUserAsync();
+                    player.UserId = player.User.Id;
                     _context.Update(player);
                     await _context.SaveChangesAsync();
                 }
@@ -127,7 +132,6 @@ namespace StudioMetrics.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", player.UserId);
             return View(player);
         }
 
@@ -155,9 +159,21 @@ namespace StudioMetrics.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var player = await _context.Player.FindAsync(id);
+            // Need to make sure that if the player has PlayerProjects that they are also deleted when the player is deleted
+            Player player = await _context.Player
+                .Include(p => p.PlayerProjects)
+                .SingleOrDefaultAsync(p => p.PlayerId == id);
+            //.FindAsync(id);
+
+            foreach (PlayerProject pp in player.PlayerProjects)
+            {
+                _context.PlayerProject.Remove(pp);
+            }
+
             _context.Player.Remove(player);
+
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
