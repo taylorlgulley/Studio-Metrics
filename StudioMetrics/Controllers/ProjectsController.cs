@@ -70,10 +70,14 @@ namespace StudioMetrics.Controllers
             var projectTypes = await _context.ProjectType.ToListAsync();
             var statusTypes = await _context.StatusType.ToListAsync();
             var clients = await _context.Client.Where(c => c.User == user).ToListAsync();
+            var players = await _context.Player.Where(c => c.User == user).ToListAsync();
+            var artists = await _context.Artist.Where(c => c.User == user).ToListAsync();
 
             var projectTypeListOptions = new List<SelectListItem>();
             var statusTypeListOptions = new List<SelectListItem>();
             var clientListOptions = new List<SelectListItem>();
+            var playerListOptions = new List<SelectListItem>();
+            var artistListOptions = new List<SelectListItem>();
 
             foreach (ProjectType pt in projectTypes)
             {
@@ -102,6 +106,24 @@ namespace StudioMetrics.Controllers
                 });
             }
 
+            foreach (Player p in players)
+            {
+                playerListOptions.Add(new SelectListItem
+                {
+                    Value = p.PlayerId.ToString(),
+                    Text = p.FirstName + " " + p.LastName
+                });
+            }
+
+            foreach (Artist a in artists)
+            {
+                artistListOptions.Add(new SelectListItem
+                {
+                    Value = a.ArtistId.ToString(),
+                    Text = a.Name
+                });
+            }
+
             ProjectCreateViewModel createViewModel = new ProjectCreateViewModel();
 
             projectTypeListOptions.Insert(0, new SelectListItem
@@ -122,9 +144,24 @@ namespace StudioMetrics.Controllers
                 Value = "0"
             });
 
+            // I dont't think these are needed since they will be a multi select and these will be nullable
+            //playerListOptions.Insert(0, new SelectListItem
+            //{
+            //    Text = "Select Players",
+            //    Value = "0"
+            //});
+
+            //artistListOptions.Insert(0, new SelectListItem
+            //{
+            //    Text = "Select Artists",
+            //    Value = "0"
+            //});
+
             createViewModel.ProjectTypes = projectTypeListOptions;
             createViewModel.StatusTypes = statusTypeListOptions;
             createViewModel.Clients = clientListOptions;
+            createViewModel.AvailablePlayers = playerListOptions;
+            createViewModel.AvailableArtists = artistListOptions;
 
             return View(createViewModel);
         }
