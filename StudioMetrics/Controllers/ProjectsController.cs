@@ -373,6 +373,22 @@ namespace StudioMetrics.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var playerProjects = await _context.PlayerProject.Where(pp => pp.ProjectId == id).ToListAsync();
+            if (playerProjects != null)
+            {
+                foreach (PlayerProject pp in playerProjects)
+                {
+                    _context.PlayerProject.Remove(pp);
+                }
+            }
+            var artistProjects = await _context.ArtistProject.Where(ap => ap.ProjectId == id).ToListAsync();
+            if (artistProjects != null)
+            {
+                foreach (ArtistProject ap in artistProjects)
+                {
+                    _context.ArtistProject.Remove(ap);
+                }
+            }
             var project = await _context.Project.FindAsync(id);
             _context.Project.Remove(project);
             await _context.SaveChangesAsync();
