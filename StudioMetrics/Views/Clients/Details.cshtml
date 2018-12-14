@@ -36,7 +36,7 @@
                 @*Loop over the each PlayerProject and show the Title for the associated project*@
                 @foreach (ClientArtist ca in Model.ClientArtists)
                 {
-                    <il>@ca.Client.Name</il>
+                    <li>@ca.Client.Name</li>
                 }
             </ul>
         </dd>
@@ -48,7 +48,7 @@
                 @*Loop over the each PlayerProject and show the Title for the associated project*@
                 @foreach (Project p in Model.Projects)
                 {
-                    <il>@p.Title</il>
+                    <li>@p.Title</li>
                 }
             </ul>
         </dd>

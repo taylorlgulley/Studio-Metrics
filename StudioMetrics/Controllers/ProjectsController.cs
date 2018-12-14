@@ -43,6 +43,10 @@ namespace StudioMetrics.Controllers
                 .Include(p => p.Client)
                 .Include(p => p.ProjectType)
                 .Include(p => p.StatusType)
+                .Include(p => p.PlayerProjects)
+                    .ThenInclude(pp => pp.Player)
+                .Include(p => p.ArtistProjects)
+                    .ThenInclude(ap => ap.Artist)
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.ProjectId == id);
             if (project == null)
