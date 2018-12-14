@@ -59,10 +59,28 @@
             @Html.DisplayFor(model => model.Client.Email)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.User)
+            Players on this Project
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.User.Id)
+            <ul>
+                @*Loop over the each PlayerProject and show the Title for the associated project*@
+                @foreach (PlayerProject pp in Model.PlayerProjects)
+                {
+                    <li>@pp.Player.FirstName @pp.Player.LastName</li>
+                }
+            </ul>
+        </dd>
+        <dt>
+            Associated Artists
+        </dt>
+        <dd>
+            <ul>
+                @*Loop over the each PlayerProject and show the Title for the associated project*@
+                @foreach (ArtistProject ap in Model.ArtistProjects)
+                {
+                    <li>@ap.Artist.Name</li>
+                }
+            </ul>
         </dd>
     </dl>
 </div>
