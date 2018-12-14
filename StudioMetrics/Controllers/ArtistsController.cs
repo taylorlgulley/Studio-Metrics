@@ -41,6 +41,8 @@ namespace StudioMetrics.Controllers
 
             var artist = await _context.Artist
                 .Include(a => a.User)
+                .Include(a => a.ArtistProjects)
+                    .ThenInclude(ap => ap.Project)
                 .FirstOrDefaultAsync(m => m.ArtistId == id);
             if (artist == null)
             {
@@ -53,7 +55,6 @@ namespace StudioMetrics.Controllers
         // GET: Artists/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
         }
 
@@ -64,13 +65,16 @@ namespace StudioMetrics.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ArtistId,Name,UserId")] Artist artist)
         {
+            ModelState.Remove("User");
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
+                artist.User = await GetCurrentUserAsync();
+                artist.UserId = artist.User.Id;
                 _context.Add(artist);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", artist.UserId);
             return View(artist);
         }
 
@@ -87,7 +91,6 @@ namespace StudioMetrics.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", artist.UserId);
             return View(artist);
         }
 
@@ -103,10 +106,14 @@ namespace StudioMetrics.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove("User");
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 try
                 {
+                    artist.User = await GetCurrentUserAsync();
+                    artist.UserId = artist.User.Id;
                     _context.Update(artist);
                     await _context.SaveChangesAsync();
                 }
@@ -123,7 +130,6 @@ namespace StudioMetrics.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", artist.UserId);
             return View(artist);
         }
 
@@ -151,7 +157,16 @@ namespace StudioMetrics.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var artist = await _context.Artist.FindAsync(id);
+            var artist = await _context.Artist
+                .Include(p => p.ArtistProjects)
+                .SingleOrDefaultAsync(p => p.ArtistId == id);
+            //.FindAsync(id);
+
+            foreach (ArtistProject ap in artist.ArtistProjects)
+            {
+                _context.ArtistProject.Remove(ap);
+            }
+
             _context.Artist.Remove(artist);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

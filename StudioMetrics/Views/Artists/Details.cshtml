@@ -17,10 +17,16 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.User)
+            Their Projects
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.User.Id)
+            <ul>
+                @*Loop over the each ArtistProject and show the Title for the associated project*@
+                @foreach (ArtistProject ap in Model.ArtistProjects)
+                {
+                    <il>@ap.Project.Title</il>
+                }
+            </ul>
         </dd>
     </dl>
 </div>
