@@ -1,0 +1,48 @@
+﻿@model StudioMetrics.Models.Artist
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Artist</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            Their Clients
+        </dt>
+        <dd>
+            <ul>
+                @*Loop over the each ArtistProject and show the Title for the associated project*@
+                @foreach (ClientArtist ca in Model.ClientArtists)
+                {
+                    <il>@ca.Client.Name</il>
+                }
+            </ul>
+        </dd>
+        <dt>
+            Their Projects
+        </dt>
+        <dd>
+            <ul>
+                @*Loop over the each ArtistProject and show the Title for the associated project*@
+                @foreach (ArtistProject ap in Model.ArtistProjects)
+                {
+                    <il>@ap.Project.Title</il>
+                }
+            </ul>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ArtistId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
