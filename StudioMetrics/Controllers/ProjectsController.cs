@@ -285,7 +285,7 @@ namespace StudioMetrics.Controllers
 
         // GET: Projects/Edit/5
         [Authorize]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, ProjectEditViewModel editProject)
         {
             if (id == null)
             {
@@ -297,11 +297,89 @@ namespace StudioMetrics.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClientId"] = new SelectList(_context.Client, "ClientId", "Email", project.ClientId);
-            ViewData["ProjectTypeId"] = new SelectList(_context.ProjectType, "ProjectTypeId", "Type", project.ProjectTypeId);
-            ViewData["StatusTypeId"] = new SelectList(_context.StatusType, "StatusTypeId", "Type", project.StatusTypeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", project.UserId);
-            return View(project);
+            var user = await GetCurrentUserAsync();
+
+            var projectTypes = await _context.ProjectType.ToListAsync();
+            var statusTypes = await _context.StatusType.ToListAsync();
+            var clients = await _context.Client.Where(c => c.User == user).ToListAsync();
+            var players = await _context.Player.Where(c => c.User == user).ToListAsync();
+            var artists = await _context.Artist.Where(c => c.User == user).ToListAsync();
+            var playerProjects = await _context.PlayerProject.Where(c => c.ProjectId == id).ToListAsync();
+            var artistProjects = await _context.ArtistProject.Where(c => c.ProjectId == id).ToListAsync();
+
+            var projectTypeListOptions = new List<SelectListItem>();
+            var statusTypeListOptions = new List<SelectListItem>();
+            var clientListOptions = new List<SelectListItem>();
+            var playerListOptions = new List<SelectListItem>();
+            var artistListOptions = new List<SelectListItem>();
+            var playerIds = new List<int>();
+            var artistIds = new List<int>();
+
+            foreach (ProjectType pt in projectTypes)
+            {
+                projectTypeListOptions.Add(new SelectListItem
+                {
+                    Value = pt.ProjectTypeId.ToString(),
+                    Text = pt.Type
+                });
+            }
+
+            foreach (StatusType st in statusTypes)
+            {
+                statusTypeListOptions.Add(new SelectListItem
+                {
+                    Value = st.StatusTypeId.ToString(),
+                    Text = st.Type
+                });
+            }
+
+            foreach (Client c in clients)
+            {
+                clientListOptions.Add(new SelectListItem
+                {
+                    Value = c.ClientId.ToString(),
+                    Text = c.Name
+                });
+            }
+
+            foreach (Player p in players)
+            {
+                playerListOptions.Add(new SelectListItem
+                {
+                    Value = p.PlayerId.ToString(),
+                    Text = p.FirstName + " " + p.LastName
+                });
+            }
+
+            foreach (Artist a in artists)
+            {
+                artistListOptions.Add(new SelectListItem
+                {
+                    Value = a.ArtistId.ToString(),
+                    Text = a.Name
+                });
+            }
+
+            foreach (PlayerProject pp in playerProjects)
+            {
+                playerIds.Add(pp.PlayerId);
+            }
+
+            foreach (ArtistProject ap in artistProjects)
+            {
+                artistIds.Add(ap.ArtistId);
+            }
+
+            editProject.ProjectTypes = projectTypeListOptions;
+            editProject.StatusTypes = statusTypeListOptions;
+            editProject.Clients = clientListOptions;
+            editProject.AvailablePlayers = playerListOptions;
+            editProject.AvailableArtists = artistListOptions;
+            editProject.Project = project;
+            editProject.SelectedPlayers = playerIds;
+            editProject.SelectedArtists = artistIds;
+
+            return View(editProject);
         }
 
         // POST: Projects/Edit/5
