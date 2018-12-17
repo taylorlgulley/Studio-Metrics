@@ -34,6 +34,14 @@ namespace StudioMetrics.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        // GET: Projects of certain type
+        [Authorize]
+        public async Task<IActionResult> ProjectsOfStatus(int ? id)
+        {
+            var filteredProjects = await _context.Project.Where(p => p.StatusTypeId == id).ToListAsync();
+            return View(filteredProjects);
+        }
+
         // GET: Projects/Details/5
         [Authorize]
         public async Task<IActionResult> Details(int? id)
