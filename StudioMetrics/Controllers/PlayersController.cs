@@ -170,13 +170,15 @@ namespace StudioMetrics.Controllers
         {
             // Need to make sure that if the player has PlayerProjects that they are also deleted when the player is deleted
             Player player = await _context.Player
-                .Include(p => p.PlayerProjects)
                 .SingleOrDefaultAsync(p => p.PlayerId == id);
-            //.FindAsync(id);
 
-            foreach (PlayerProject pp in player.PlayerProjects)
+            var playerProjects = await _context.PlayerProject.Where(pp => pp.PlayerId == id).ToListAsync();
+            if (playerProjects != null)
             {
-                _context.PlayerProject.Remove(pp);
+                foreach (PlayerProject pp in playerProjects)
+                {
+                    _context.PlayerProject.Remove(pp);
+                }
             }
 
             _context.Player.Remove(player);

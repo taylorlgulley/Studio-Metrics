@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudioMetrics.Data;
 using StudioMetrics.Models;
+using StudioMetrics.Models.ViewModels;
 
 namespace StudioMetrics.Controllers
 {
@@ -58,9 +59,28 @@ namespace StudioMetrics.Controllers
 
         // GET: Clients/Create
         [Authorize]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var user = await GetCurrentUserAsync();
+
+            var artists = await _context.Artist.Where(c => c.User == user).ToListAsync();
+
+            var artistListOptions = new List<SelectListItem>();
+
+            foreach (Artist a in artists)
+            {
+                artistListOptions.Add(new SelectListItem
+                {
+                    Value = a.ArtistId.ToString(),
+                    Text = a.Name
+                });
+            }
+
+            ClientCreateViewModel createViewModel = new ClientCreateViewModel();
+
+            createViewModel.AvailableArtists = artistListOptions;
+
+            return View(createViewModel);
         }
 
         // POST: Clients/Create
@@ -69,24 +89,36 @@ namespace StudioMetrics.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ClientId,Name,Phone,Email,UserId")] Client client)
+        public async Task<IActionResult> Create(ClientCreateViewModel createClient)
         {
-            ModelState.Remove("User");
-            ModelState.Remove("UserId");
+            ModelState.Remove("Client.User");
+            ModelState.Remove("Client.UserId");
             if (ModelState.IsValid)
             {
-                client.User = await GetCurrentUserAsync();
-                client.UserId = client.User.Id;
-                _context.Add(client);
+                createClient.Client.User = await GetCurrentUserAsync();
+                createClient.Client.UserId = createClient.Client.User.Id;
+                _context.Add(createClient.Client);
+                if (createClient.SelectedArtists != null)
+                {
+                    foreach (int artistId in createClient.SelectedArtists)
+                    {
+                        ClientArtist newCA = new ClientArtist()
+                        {
+                            ClientId = createClient.Client.ClientId,
+                            ArtistId = artistId
+                        };
+                        _context.Add(newCA);
+                    }
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(client);
+            return View(createClient);
         }
 
         // GET: Clients/Edit/5
         [Authorize]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, ClientEditViewModel editViewModel)
         {
             if (id == null)
             {
@@ -98,7 +130,32 @@ namespace StudioMetrics.Controllers
             {
                 return NotFound();
             }
-            return View(client);
+            var user = await GetCurrentUserAsync();
+
+            var artists = await _context.Artist.Where(a => a.User == user).ToListAsync();
+            var clientArtists = await _context.ClientArtist.Where(ca => ca.ClientId == id).ToListAsync();
+
+            var artistListOptions = new List<SelectListItem>();
+            var artistIds = new List<int>();
+
+            foreach (Artist a in artists)
+            {
+                artistListOptions.Add(new SelectListItem
+                {
+                    Value = a.ArtistId.ToString(),
+                    Text = a.Name
+                });
+            }
+
+            foreach (ClientArtist ca in clientArtists)
+            {
+                artistIds.Add(ca.ArtistId);
+            }
+
+            editViewModel.AvailableArtists = artistListOptions;
+            editViewModel.Client = client;
+            editViewModel.SelectedArtists = artistIds;
+            return View(editViewModel);
         }
 
         // POST: Clients/Edit/5
@@ -107,27 +164,49 @@ namespace StudioMetrics.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ClientId,Name,Phone,Email,UserId")] Client client)
+        public async Task<IActionResult> Edit(int id, ClientEditViewModel editClient)
         {
-            if (id != client.ClientId)
+            if (id != editClient.Client.ClientId)
             {
                 return NotFound();
             }
 
-            ModelState.Remove("User");
-            ModelState.Remove("UserId");
+            ModelState.Remove("Client.User");
+            ModelState.Remove("Client.UserId");
             if (ModelState.IsValid)
             {
+                // Delete joiner tables
+                var clientArtists = await _context.ClientArtist.Where(ca => ca.ClientId == id).ToListAsync();
+                if (clientArtists != null)
+                {
+                    foreach (ClientArtist ca in clientArtists)
+                    {
+                        _context.ClientArtist.Remove(ca);
+                    }
+                }
                 try
                 {
-                    client.User = await GetCurrentUserAsync();
-                    client.UserId = client.User.Id;
-                    _context.Update(client);
+                    editClient.Client.User = await GetCurrentUserAsync();
+                    editClient.Client.UserId = editClient.Client.User.Id;
+                    // Add the new joiner tables if their are any
+                    if (editClient.SelectedArtists != null)
+                    {
+                        foreach (int artistId in editClient.SelectedArtists)
+                        {
+                            ClientArtist newCA = new ClientArtist()
+                            {
+                                ClientId = editClient.Client.ClientId,
+                                ArtistId = artistId
+                            };
+                            _context.Add(newCA);
+                        }
+                    }
+                    _context.Update(editClient.Client);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClientExists(client.ClientId))
+                    if (!ClientExists(editClient.Client.ClientId))
                     {
                         return NotFound();
                     }
@@ -138,7 +217,7 @@ namespace StudioMetrics.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(client);
+            return View(editClient);
         }
 
         // GET: Clients/Delete/5
