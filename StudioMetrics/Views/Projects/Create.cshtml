@@ -1,4 +1,4 @@
-﻿@model StudioMetrics.Models.Project
+﻿@model StudioMetrics.Models.ViewModels.ProjectCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,45 +13,54 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="Project.Title" class="control-label"></label>
+                <input asp-for="Project.Title" class="form-control" />
+                <span asp-validation-for="Project.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProjectTypeId" class="control-label"></label>
-                <select asp-for="ProjectTypeId" class ="form-control" asp-items="ViewBag.ProjectTypeId"></select>
+                <label asp-for="Project.ProjectTypeId" class="control-label"></label>
+                <select asp-for="Project.ProjectTypeId" class="form-control" asp-items="@Model.ProjectTypes"></select>
+                <span asp-validation-for="Project.ProjectTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Project.Description" class="control-label"></label>
+                <input asp-for="Project.Description" class="form-control" />
+                <span asp-validation-for="Project.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Payrate" class="control-label"></label>
-                <input asp-for="Payrate" class="form-control" />
-                <span asp-validation-for="Payrate" class="text-danger"></span>
+                <label asp-for="Project.Payrate" class="control-label"></label>
+                <input asp-for="Project.Payrate" class="form-control" />
+                <span asp-validation-for="Project.Payrate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TimeTable" class="control-label"></label>
-                <input asp-for="TimeTable" class="form-control" />
-                <span asp-validation-for="TimeTable" class="text-danger"></span>
+                <label asp-for="Project.TimeTable" class="control-label"></label>
+                <input asp-for="Project.TimeTable" class="form-control" />
+                <span asp-validation-for="Project.TimeTable" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
+                <label asp-for="Project.StartDate" class="control-label"></label>
+                <input asp-for="Project.StartDate" class="form-control" />
+                <span asp-validation-for="Project.StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StatusTypeId" class="control-label"></label>
-                <select asp-for="StatusTypeId" class ="form-control" asp-items="ViewBag.StatusTypeId"></select>
+                <label asp-for="Project.StatusTypeId" class="control-label"></label>
+                <select asp-for="Project.StatusTypeId" class="form-control" asp-items="@Model.StatusTypes"></select>
+                <span asp-validation-for="Project.StatusTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ClientId" class="control-label"></label>
-                <select asp-for="ClientId" class ="form-control" asp-items="ViewBag.ClientId"></select>
+                <label asp-for="Project.ClientId" class="control-label"></label>
+                <select asp-for="Project.ClientId" class="form-control" asp-items="@Model.Clients"></select>
+                <span asp-validation-for="Project.ClientId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+                <label asp-for="SelectedPlayers" class="control-label"></label>
+                <select multiple asp-for="SelectedPlayers" class="form-control" asp-items="@Model.AvailablePlayers"></select>
+                <span asp-validation-for="SelectedPlayers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SelectedArtists" class="control-label"></label>
+                <select multiple asp-for="SelectedArtists" class="form-control" asp-items="@Model.AvailableArtists"></select>
+                <span asp-validation-for="SelectedArtists" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudioMetrics.Data;
 using StudioMetrics.Models;
+using StudioMetrics.Models.ViewModels;
 
 namespace StudioMetrics.Controllers
 {
@@ -25,6 +27,7 @@ namespace StudioMetrics.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Artists
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Artist.Include(a => a.User);
@@ -32,6 +35,7 @@ namespace StudioMetrics.Controllers
         }
 
         // GET: Artists/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -55,33 +59,67 @@ namespace StudioMetrics.Controllers
         }
 
         // GET: Artists/Create
-        public IActionResult Create()
+        [Authorize]
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var user = await GetCurrentUserAsync();
+
+            var clients = await _context.Client.Where(c => c.User == user).ToListAsync();
+
+            var clientListOptions = new List<SelectListItem>();
+
+            foreach (Client c in clients)
+            {
+                clientListOptions.Add(new SelectListItem
+                {
+                    Value = c.ClientId.ToString(),
+                    Text = c.Name
+                });
+            }
+
+            ArtistCreateViewModel createViewModel = new ArtistCreateViewModel();
+
+            createViewModel.AvailableClients = clientListOptions;
+
+            return View(createViewModel);
         }
 
         // POST: Artists/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ArtistId,Name,UserId")] Artist artist)
+        public async Task<IActionResult> Create(ArtistCreateViewModel createArtist)
         {
-            ModelState.Remove("User");
-            ModelState.Remove("UserId");
+            ModelState.Remove("Artist.User");
+            ModelState.Remove("Artist.UserId");
             if (ModelState.IsValid)
             {
-                artist.User = await GetCurrentUserAsync();
-                artist.UserId = artist.User.Id;
-                _context.Add(artist);
+                createArtist.Artist.User = await GetCurrentUserAsync();
+                createArtist.Artist.UserId = createArtist.Artist.User.Id;
+                _context.Add(createArtist.Artist);
+                if (createArtist.SelectedClients != null)
+                {
+                    foreach (int clientId in createArtist.SelectedClients)
+                    {
+                        ClientArtist newCA = new ClientArtist()
+                        {
+                            ClientId = clientId,
+                            ArtistId = createArtist.Artist.ArtistId
+                        };
+                        _context.Add(newCA);
+                    }
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(artist);
+            return View(createArtist);
         }
 
         // GET: Artists/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [Authorize]
+        public async Task<IActionResult> Edit(int? id, ArtistEditViewModel editViewModel)
         {
             if (id == null)
             {
@@ -93,35 +131,84 @@ namespace StudioMetrics.Controllers
             {
                 return NotFound();
             }
-            return View(artist);
+            var user = await GetCurrentUserAsync();
+
+            var clients = await _context.Client.Where(c => c.User == user).ToListAsync();
+            var clientArtists = await _context.ClientArtist.Where(ca => ca.ArtistId == id).ToListAsync();
+
+            var clientListOptions = new List<SelectListItem>();
+            var clientIds = new List<int>();
+
+            foreach (Client c in clients)
+            {
+                clientListOptions.Add(new SelectListItem
+                {
+                    Value = c.ClientId.ToString(),
+                    Text = c.Name
+                });
+            }
+
+            foreach (ClientArtist ca in clientArtists)
+            {
+                clientIds.Add(ca.ClientId);
+            }
+
+            editViewModel.AvailableClients = clientListOptions;
+            editViewModel.Artist = artist;
+            editViewModel.SelectedClients = clientIds;
+
+            return View(editViewModel);
         }
 
         // POST: Artists/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ArtistId,Name,UserId")] Artist artist)
+        public async Task<IActionResult> Edit(int id, ArtistEditViewModel editArtist)
         {
-            if (id != artist.ArtistId)
+            if (id != editArtist.Artist.ArtistId)
             {
                 return NotFound();
             }
 
-            ModelState.Remove("User");
-            ModelState.Remove("UserId");
+            ModelState.Remove("Artist.User");
+            ModelState.Remove("Artist.UserId");
             if (ModelState.IsValid)
             {
+                // Delete joiner tables
+                var clientArtists = await _context.ClientArtist.Where(ca => ca.ArtistId == id).ToListAsync();
+                if (clientArtists != null)
+                {
+                    foreach (ClientArtist ca in clientArtists)
+                    {
+                        _context.ClientArtist.Remove(ca);
+                    }
+                }
                 try
                 {
-                    artist.User = await GetCurrentUserAsync();
-                    artist.UserId = artist.User.Id;
-                    _context.Update(artist);
+                    editArtist.Artist.User = await GetCurrentUserAsync();
+                    editArtist.Artist.UserId = editArtist.Artist.User.Id;
+                    // Add the new joiner tables if their are any
+                    if (editArtist.SelectedClients != null)
+                    {
+                        foreach (int clientId in editArtist.SelectedClients)
+                        {
+                            ClientArtist newCA = new ClientArtist()
+                            {
+                                ClientId = clientId,
+                                ArtistId = editArtist.Artist.ArtistId
+                            };
+                            _context.Add(newCA);
+                        }
+                    }
+                    _context.Update(editArtist.Artist);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ArtistExists(artist.ArtistId))
+                    if (!ArtistExists(editArtist.Artist.ArtistId))
                     {
                         return NotFound();
                     }
@@ -132,10 +219,11 @@ namespace StudioMetrics.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(artist);
+            return View(editArtist);
         }
 
         // GET: Artists/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -156,17 +244,28 @@ namespace StudioMetrics.Controllers
 
         // POST: Artists/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var artist = await _context.Artist
-                .Include(p => p.ArtistProjects)
                 .SingleOrDefaultAsync(p => p.ArtistId == id);
-            //.FindAsync(id);
 
-            foreach (ArtistProject ap in artist.ArtistProjects)
+            var artistProjects = await _context.ArtistProject.Where(ap => ap.ArtistId == id).ToListAsync();
+            if (artistProjects != null)
             {
-                _context.ArtistProject.Remove(ap);
+                foreach (ArtistProject ap in artistProjects)
+                {
+                    _context.ArtistProject.Remove(ap);
+                }
+            }
+            var clientArtists = await _context.ClientArtist.Where(ap => ap.ArtistId == id).ToListAsync();
+            if (clientArtists != null)
+            {
+                foreach (ClientArtist ca in clientArtists)
+                {
+                    _context.ClientArtist.Remove(ca);
+                }
             }
 
             _context.Artist.Remove(artist);
