@@ -388,23 +388,69 @@ namespace StudioMetrics.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,Title,ProjectTypeId,Description,Payrate,TimeTable,StartDate,StatusTypeId,ClientId,UserId")] Project project)
+        public async Task<IActionResult> Edit(int id, ProjectEditViewModel editProject)
         {
-            if (id != project.ProjectId)
+            if (id != editProject.Project.ProjectId)
             {
                 return NotFound();
             }
 
+            ModelState.Remove("Project.User");
+            ModelState.Remove("Project.UserId");
             if (ModelState.IsValid)
             {
+                // Delete joiner tables
+                var playerProjects = await _context.PlayerProject.Where(pp => pp.ProjectId == id).ToListAsync();
+                if (playerProjects != null)
+                {
+                    foreach (PlayerProject pp in playerProjects)
+                    {
+                        _context.PlayerProject.Remove(pp);
+                    }
+                }
+                var artistProjects = await _context.ArtistProject.Where(ap => ap.ProjectId == id).ToListAsync();
+                if (artistProjects != null)
+                {
+                    foreach (ArtistProject ap in artistProjects)
+                    {
+                        _context.ArtistProject.Remove(ap);
+                    }
+                }
                 try
                 {
-                    _context.Update(project);
+                    editProject.Project.User = await GetCurrentUserAsync();
+                    editProject.Project.UserId = editProject.Project.User.Id;
+                    // Add the new joiner tables if their are any
+                    if (editProject.SelectedPlayers != null)
+                    {
+                        foreach (int playerId in editProject.SelectedPlayers)
+                        {
+                            PlayerProject newPP = new PlayerProject()
+                            {
+                                PlayerId = playerId,
+                                ProjectId = editProject.Project.ProjectId
+                            };
+                            _context.Add(newPP);
+                        }
+                    }
+                    if (editProject.SelectedArtists != null)
+                    {
+                        foreach (int artistId in editProject.SelectedArtists)
+                        {
+                            ArtistProject newAP = new ArtistProject()
+                            {
+                                ArtistId = artistId,
+                                ProjectId = editProject.Project.ProjectId
+                            };
+                            _context.Add(newAP);
+                        }
+                    }
+                    _context.Update(editProject.Project);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProjectExists(project.ProjectId))
+                    if (!ProjectExists(editProject.Project.ProjectId))
                     {
                         return NotFound();
                     }
@@ -414,12 +460,9 @@ namespace StudioMetrics.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
+                // Add logic to get the dropdown items and multiselect items
             }
-            ViewData["ClientId"] = new SelectList(_context.Client, "ClientId", "Email", project.ClientId);
-            ViewData["ProjectTypeId"] = new SelectList(_context.ProjectType, "ProjectTypeId", "Type", project.ProjectTypeId);
-            ViewData["StatusTypeId"] = new SelectList(_context.StatusType, "StatusTypeId", "Type", project.StatusTypeId);
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", project.UserId);
-            return View(project);
+            return View(editProject);
         }
 
         // GET: Projects/Delete/5
