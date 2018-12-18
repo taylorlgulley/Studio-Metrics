@@ -38,7 +38,13 @@ namespace StudioMetrics.Controllers
         [Authorize]
         public async Task<IActionResult> ProjectsOfStatus(int ? id)
         {
-            var filteredProjects = await _context.Project.Where(p => p.StatusTypeId == id).ToListAsync();
+            var filteredProjects = await _context.Project.Include(p => p.Client).Include(p => p.ProjectType).Include(p => p.StatusType).ToListAsync();
+
+            if (id != null)
+            {
+                filteredProjects = filteredProjects.Where(p => p.StatusTypeId == id).ToList();
+                //var filteredProjects = await _context.Project.Where(p => p.StatusTypeId == id).ToListAsync();
+            }
             return View(filteredProjects);
         }
 

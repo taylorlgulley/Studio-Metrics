@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<StudioMetrics.Models.Project>
+@addTagHelper *, StudioMetrics
 
 @{
     ViewData["Title"] = "Index";
@@ -6,13 +7,8 @@
 
 <h2>Index</h2>
 
-<row>
-    <a asp-action="Create">All</a>
-    <a asp-action="ProjectOfStatus" asp-route-id="1">Upcoming</a>
-    <a asp-action="ProjectOfStatus" asp-route-id="2">Completed</a>
-    <a asp-action="ProjectOfStatus" asp-route-id="3">Current</a>
-    <a asp-action="ProjectOfStatus" asp-route-id="4">Tentative</a>
-</row>
+<vc:project-tabs active-tab="All"></vc:project-tabs>
+
 <table class="table">
     <thead>
         <tr>
