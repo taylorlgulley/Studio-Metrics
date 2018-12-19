@@ -46,7 +46,7 @@ namespace StudioMetrics.Controllers
                 return View(filteredProjects);
                 //var filteredProjects = await _context.Project.Where(p => p.StatusTypeId == id).ToListAsync();
             }
-            return View(projects);
+            return View(projects); 
         }
 
         // GET: Projects/Details/5

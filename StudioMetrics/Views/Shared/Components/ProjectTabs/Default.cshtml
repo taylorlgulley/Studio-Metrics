@@ -3,7 +3,7 @@
 
 <div class="responsiveTabs">
     <ul id="myTab" class="nav nav-tabs" style="margin-bottom: 15px;">
-        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "null" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="null">All</a></li>
+        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "All" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="All">All</a></li>
         <li class="@(ViewContext.RouteData.Values["id"].ToString() == "1" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="1">Upcoming</a></li>
         <li class="@(ViewContext.RouteData.Values["id"].ToString() == "2" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="2">Completed</a></li>
         <li class="@(ViewContext.RouteData.Values["id"].ToString() == "3" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="3">Current</a></li>
