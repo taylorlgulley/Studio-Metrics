@@ -1,0 +1,78 @@
+﻿@model IEnumerable<StudioMetrics.Models.Project>
+@addTagHelper *, StudioMetrics
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<vc:project-tabs active-tab="All"></vc:project-tabs>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProjectType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Payrate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeTable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Client)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectType.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Payrate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeTable) Days
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatusType.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Client.Email)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProjectId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ProjectId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProjectId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

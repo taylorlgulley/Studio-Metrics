@@ -23,6 +23,12 @@ body {
     width: 100%;
 }
 
+/*Making the Project Tabs have a certain width and margin*/
+.responsiveTabs {
+    max-width: 1200px;
+    margin: auto;
+}
+
 /* QR code generator */
 #qrCode {
     margin: 15px;
