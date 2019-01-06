@@ -9,6 +9,7 @@ namespace StudioMetrics.ViewComponents
     public class ProjectTabsViewModel
     {
         public string ActiveTab { get; set; }
+        /*have properties to count the number of projects in and pass it in to the view componet tabs you can pass it in like the active tab follow Steve's view component example*/
     }
 
     public class ProjectTabsViewComponent : ViewComponent

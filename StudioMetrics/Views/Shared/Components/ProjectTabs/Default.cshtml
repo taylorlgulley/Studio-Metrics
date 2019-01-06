@@ -10,5 +10,6 @@
         <li class="@(ViewContext.RouteData.Values["id"].ToString() == "4" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="4">Tentative</a></li>
     </ul>
     @Model.ActiveTab
+    @*Use this method to put the count next to the tab names as the value from the view model*@
 </div>
 
