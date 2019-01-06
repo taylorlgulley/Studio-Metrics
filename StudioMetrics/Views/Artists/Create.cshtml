@@ -18,7 +18,7 @@
                 <span asp-validation-for="Artist.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SelectedClients" class="control-label"></label>
+                <label asp-for="SelectedClients" class="control-label">Associated Clients</label>
                 <select multiple asp-for="SelectedClients" class="form-control" asp-items="@Model.AvailableClients"></select>
                 <span asp-validation-for="SelectedClients" class="text-danger"></span>
             </div>

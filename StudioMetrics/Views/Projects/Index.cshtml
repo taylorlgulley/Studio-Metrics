@@ -16,13 +16,13 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProjectType)
+                Project Type
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Payrate)
+                @Html.DisplayNameFor(model => model.Payrate) Per Day
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.TimeTable)
@@ -31,7 +31,7 @@
                 @Html.DisplayNameFor(model => model.StartDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StatusType)
+                Status
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Client)
@@ -64,7 +64,7 @@
                 @Html.DisplayFor(modelItem => item.StatusType.Type)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Client.Email)
+                @Html.DisplayFor(modelItem => item.Client.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProjectId">Edit</a> |

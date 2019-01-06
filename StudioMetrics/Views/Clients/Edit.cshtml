@@ -29,7 +29,7 @@
                 <span asp-validation-for="Client.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SelectedArtists" class="control-label"></label>
+                <label asp-for="SelectedArtists" class="control-label">Associated Artists</label>
                 <select multiple asp-for="SelectedArtists" class="form-control" asp-items="@Model.AvailableArtists"></select>
                 <span asp-validation-for="SelectedArtists" class="text-danger"></span>
             </div>
