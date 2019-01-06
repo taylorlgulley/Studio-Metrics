@@ -29,6 +29,20 @@ body {
     margin: auto;
 }
 
+/*To move the position of the search bar down*/
+.nav-search {
+    position: relative;
+}
+
+/*To adjust the results from the search*/
+.nav-search input {
+    margin: 0;
+    margin-left: 10px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(30%);
+}
+
 /* QR code generator */
 #qrCode {
     margin: 15px;

@@ -26,6 +26,21 @@ namespace StudioMetrics.Controllers
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
+        // GET: Search Projects
+        [Authorize]
+        public async Task<IActionResult> Search(string search)
+        {
+            ProjectSearchViewModel viewmodel = new ProjectSearchViewModel();
+
+            viewmodel.Search = search;
+
+            viewmodel.Projects = await _context.Project
+                                    .Where(p => p.Title.Contains(search))
+                                    .ToListAsync();
+
+            return View(viewmodel);
+        }
+
         // GET: Projects
         [Authorize]
         public async Task<IActionResult> Index()

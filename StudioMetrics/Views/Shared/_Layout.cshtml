@@ -35,8 +35,11 @@
                     <li><a asp-area="" asp-controller="Clients" asp-action="Index">Clients</a></li>
                     <li><a asp-area="" asp-controller="Artists" asp-action="Index">Artists</a></li>
                     <li><a asp-area="" asp-controller="Players" asp-action="Index">Players</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li>
+                        <form asp-controller="Projects" asp-action="Search" method="get" class="nav-search">
+                            <input type="text" name="search" class="input-sm" placeholder="Search for a project" />
+                        </form>
+                    </li>
                 </ul>
                 <partial name="_LoginPartial" />
             </div>
