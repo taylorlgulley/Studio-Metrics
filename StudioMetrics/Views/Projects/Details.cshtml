@@ -29,7 +29,7 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Payrate)
+            @Html.DisplayNameFor(model => model.Payrate) Per Day
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Payrate)
@@ -38,7 +38,7 @@
             @Html.DisplayNameFor(model => model.TimeTable)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.TimeTable)
+            @Html.DisplayFor(model => model.TimeTable) Days
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.StartDate)
@@ -86,5 +86,5 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.ProjectId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="ProjectsOfStatus" asp-route-id="All">Back to List</a>
 </div>

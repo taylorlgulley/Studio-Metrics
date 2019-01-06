@@ -7,6 +7,10 @@
 
 <h2>Index</h2>
 
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
 <vc:project-tabs active-tab="All"></vc:project-tabs>
 
 <table class="table">
@@ -16,22 +20,22 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProjectType)
+                Project Type
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Payrate)
+                @Html.DisplayNameFor(model => model.Payrate) Per Day
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.TimeTable)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                Start Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StatusType)
+                Status
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Client)
@@ -65,7 +69,7 @@
                     @Html.DisplayFor(modelItem => item.StatusType.Type)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Client.Email)
+                    @Html.DisplayFor(modelItem => item.Client.Name)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ProjectId">Edit</a> |

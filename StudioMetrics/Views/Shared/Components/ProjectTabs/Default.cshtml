@@ -3,12 +3,11 @@
 
 <div class="responsiveTabs">
     <ul id="myTab" class="nav nav-tabs" style="margin-bottom: 15px;">
-        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "All" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="All">All</a></li>
-        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "1" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="1">Upcoming</a></li>
-        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "2" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="2">Completed</a></li>
-        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "3" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="3">Current</a></li>
-        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "4" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="4">Tentative</a></li>
+        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "All" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="All">All (@Model.CountAll)</a></li>
+        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "1" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="1">Upcoming (@Model.CountUpcoming)</a></li>
+        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "2" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="2">Completed (@Model.CountCompleted)</a></li>
+        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "3" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="3">Current (@Model.CountCurrent)</a></li>
+        <li class="@(ViewContext.RouteData.Values["id"].ToString() == "4" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="4">Tentative (@Model.CountTentative)</a></li>
     </ul>
-    @Model.ActiveTab
 </div>
 

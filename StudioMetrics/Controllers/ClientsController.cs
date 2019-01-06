@@ -30,7 +30,8 @@ namespace StudioMetrics.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Client.Include(c => c.User);
+            var user = await GetCurrentUserAsync();
+            var applicationDbContext = _context.Client.Where(c => c.User == user).Include(c => c.User);
             return View(await applicationDbContext.ToListAsync());
         }
 

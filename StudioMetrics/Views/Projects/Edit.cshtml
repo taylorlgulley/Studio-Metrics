@@ -19,7 +19,7 @@
                 <span asp-validation-for="Project.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Project.ProjectTypeId" class="control-label"></label>
+                <label asp-for="Project.ProjectTypeId" class="control-label">Project Type</label>
                 <select asp-for="Project.ProjectTypeId" class="form-control" asp-items="@Model.ProjectTypes"></select>
                 <span asp-validation-for="Project.ProjectTypeId" class="text-danger"></span>
             </div>
@@ -29,22 +29,22 @@
                 <span asp-validation-for="Project.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Project.Payrate" class="control-label"></label>
+                <label asp-for="Project.Payrate" class="control-label">Payrate Per Day</label>
                 <input asp-for="Project.Payrate" class="form-control" />
                 <span asp-validation-for="Project.Payrate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Project.TimeTable" class="control-label"></label>
+                <label asp-for="Project.TimeTable" class="control-label">Time Table in Days</label>
                 <input asp-for="Project.TimeTable" class="form-control" />
                 <span asp-validation-for="Project.TimeTable" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Project.StartDate" class="control-label"></label>
+                <label asp-for="Project.StartDate" class="control-label">Start Date</label>
                 <input asp-for="Project.StartDate" class="form-control" />
                 <span asp-validation-for="Project.StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Project.StatusTypeId" class="control-label"></label>
+                <label asp-for="Project.StatusTypeId" class="control-label">Status</label>
                 <select asp-for="Project.StatusTypeId" class="form-control" asp-items="@Model.StatusTypes"></select>
                 <span asp-validation-for="Project.StatusTypeId" class="text-danger"></span>
             </div>
@@ -54,12 +54,12 @@
                 <span asp-validation-for="Project.ClientId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SelectedPlayers" class="control-label"></label>
+                <label asp-for="SelectedPlayers" class="control-label">Inhouse Players</label>
                 <select multiple asp-for="SelectedPlayers" class="form-control" asp-items="@Model.AvailablePlayers"></select>
                 <span asp-validation-for="SelectedPlayers" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SelectedArtists" class="control-label"></label>
+                <label asp-for="SelectedArtists" class="control-label">Associated Players</label>
                 <select multiple asp-for="SelectedArtists" class="form-control" asp-items="@Model.AvailableArtists"></select>
                 <span asp-validation-for="SelectedArtists" class="text-danger"></span>
             </div>
@@ -71,7 +71,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="ProjectsOfStatus" asp-route-id="All">Back to List</a>
 </div>
 
 @section Scripts {

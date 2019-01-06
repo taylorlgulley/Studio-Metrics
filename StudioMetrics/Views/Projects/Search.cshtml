@@ -1,0 +1,48 @@
+﻿@model StudioMetrics.Models.ViewModels.ProjectSearchViewModel
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h2>Search Results for "@Model.Search"</h2>
+<hr />
+<p>Showing all Products related to "@Model.Search"</p>
+<hr />
+@if (Model.Projects.Count() == 0)
+{
+    <p>No Projects match "@Model.Search"</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col-md-2">
+                    Title
+                </th>
+                <th class="col-md-4">
+                    Description
+                </th>
+                <th class="col-md-2">
+                    Start Date
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Projects)
+            {
+                <tr>
+                    <td class="col-md-2">
+                        <a asp-controller="Projects" asp-action="Details" asp-route-id="@item.ProjectId">@item.Title</a>
+                    </td>
+                    <td class="col-md-4">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="col-md-2">
+                        @item.StartDate
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

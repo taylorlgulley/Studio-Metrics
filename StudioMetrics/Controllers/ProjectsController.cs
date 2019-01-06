@@ -26,11 +26,28 @@ namespace StudioMetrics.Controllers
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
+        // GET: Search Projects
+        [Authorize]
+        public async Task<IActionResult> Search(string search)
+        {
+            ProjectSearchViewModel viewmodel = new ProjectSearchViewModel();
+
+            var user = await GetCurrentUserAsync();
+            viewmodel.Search = search;
+            viewmodel.Projects = await _context.Project
+                                    //.Where(p => p.User == user)
+                                    .Where(p => p.Title.Contains(search) && p.User == user)
+                                    .ToListAsync();
+
+            return View(viewmodel);
+        }
+
         // GET: Projects
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Project.Include(p => p.Client).Include(p => p.ProjectType).Include(p => p.StatusType).Include(p => p.User);
+            var user = await GetCurrentUserAsync();
+            var applicationDbContext = _context.Project.Where(p => p.User == user).Include(p => p.Client).Include(p => p.ProjectType).Include(p => p.StatusType).Include(p => p.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -38,7 +55,8 @@ namespace StudioMetrics.Controllers
         [Authorize]
         public async Task<IActionResult> ProjectsOfStatus(int ? id)
         {
-            var projects = await _context.Project.Include(p => p.Client).Include(p => p.ProjectType).Include(p => p.StatusType).ToListAsync();
+            var user = await GetCurrentUserAsync();
+            var projects = await _context.Project.Where(p => p.User == user).Include(p => p.Client).Include(p => p.ProjectType).Include(p => p.StatusType).ToListAsync();
 
             if (id != null)
             {
