@@ -27,6 +27,7 @@ body {
 .responsiveTabs {
     max-width: 1200px;
     margin: auto;
+    /*background-color: #8cacaa;*/
 }
 
 /*To move the position of the search bar down*/
@@ -41,6 +42,39 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(30%);
+}
+
+.navbar {
+    background-color: #213745;
+}
+
+.btn-delete {
+    background-color: #8e585e;
+    color: white;
+}
+
+.btn-edit {
+    background-color: #ef7c73;
+    color: white;
+}
+
+.btn-details {
+    background-color: #e09f42;
+    color: white;
+}
+
+.btn-create {
+    background-color: #8cacaa;
+    color: white;
+}
+
+.btn-save {
+    background-color: #8cacaa;
+    color: white;
+}
+
+.bg-projects {
+    background-color: #d0d0d0;
 }
 
 /* QR code generator */

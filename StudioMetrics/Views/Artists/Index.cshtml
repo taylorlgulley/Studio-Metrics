@@ -6,9 +6,9 @@
 
 <h2>List of Artists</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<form>
+    <button asp-action="Create" type="submit" class="btn btn-create btn-default">Create New Artist</button>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -25,9 +25,11 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ArtistId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ArtistId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ArtistId">Delete</a>
+                <form>
+                    <button asp-action="Edit" asp-route-id="@item.ArtistId" type="submit" class="btn btn-edit btn-default">Edit</button> |
+                    <button asp-action="Details" asp-route-id="@item.ArtistId" type="submit" class="btn btn-details btn-default">Details</button> |
+                    <button asp-action="Delete" asp-route-id="@item.ArtistId" type="submit" class="btn btn-delete btn-default">Delete</button>
+                </form>
             </td>
         </tr>
 }

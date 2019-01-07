@@ -5,15 +5,21 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Projects</h2>
 
-<p>
+@*<p>
     <a asp-action="Create">Create New</a>
-</p>
+</p>*@
+
+<form>
+    <button asp-action="Create" type="submit" class="btn btn-create btn-default">Create New</button>
+</form>
+
+<br />
 
 <vc:project-tabs active-tab="All"></vc:project-tabs>
 
-<table class="table">
+<table class="table bg-projects">
     <thead>
         <tr>
             <th>
@@ -71,10 +77,17 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Client.Name)
                 </td>
-                <td>
+                @*<td>
                     <a asp-action="Edit" asp-route-id="@item.ProjectId">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.ProjectId">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.ProjectId">Delete</a>
+                </td>*@
+                <td>
+                    <form>
+                        <button asp-action="Edit" asp-route-id="@item.ProjectId" type="submit" class="btn btn-edit btn-default">Edit</button> |
+                        <button asp-action="Details" asp-route-id="@item.ProjectId" type="submit" class="btn btn-details btn-default">Details</button> |
+                        <button asp-action="Delete" asp-route-id="@item.ProjectId" type="submit" class="btn btn-delete btn-default">Delete</button>
+                    </form>
                 </td>
             </tr>
         }
