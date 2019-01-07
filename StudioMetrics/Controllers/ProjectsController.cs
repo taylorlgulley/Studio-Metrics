@@ -227,7 +227,7 @@ namespace StudioMetrics.Controllers
                     }
                 }
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("ProjectsofStatus", new { id = 3 });
             }
 
             var user = await GetCurrentUserAsync();
@@ -492,7 +492,7 @@ namespace StudioMetrics.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("ProjectsofStatus", new { id = 3 });
                 // Add logic to get the dropdown items and multiselect items
             }
             return View(editProject);
@@ -546,7 +546,7 @@ namespace StudioMetrics.Controllers
             var project = await _context.Project.FindAsync(id);
             _context.Project.Remove(project);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("ProjectsofStatus", new { id = 3 });
         }
 
         private bool ProjectExists(int id)

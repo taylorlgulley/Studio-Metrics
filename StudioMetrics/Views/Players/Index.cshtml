@@ -4,11 +4,11 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Inhouse Players</h2>
+<h2>In-house Players</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<form>
+    <button asp-action="Create" type="submit" class="btn btn-create btn-default">Create New Player</button>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -49,9 +49,11 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.PlayerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PlayerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PlayerId">Delete</a>
+                <form>
+                    <button asp-action="Edit" asp-route-id="@item.PlayerId" type="submit" class="btn btn-edit btn-default">Edit</button> |
+                    <button asp-action="Details" asp-route-id="@item.PlayerId" type="submit" class="btn btn-details btn-default">Details</button> |
+                    <button asp-action="Delete" asp-route-id="@item.PlayerId" type="submit" class="btn btn-delete btn-default">Delete</button>
+                </form>
             </td>
         </tr>
 }
