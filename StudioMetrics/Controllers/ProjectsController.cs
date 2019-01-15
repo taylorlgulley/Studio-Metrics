@@ -30,12 +30,14 @@ namespace StudioMetrics.Controllers
         [Authorize]
         public async Task<IActionResult> Search(string search)
         {
+            // Creating an instance of the view model for the search feature
             ProjectSearchViewModel viewmodel = new ProjectSearchViewModel();
-
+            //Retrieving the user that is currently logged in
             var user = await GetCurrentUserAsync();
+            // Setting the string from the search bar as the Search property in the view model for the search view
             viewmodel.Search = search;
+            // Retrieving all the projects from the database that have the current user attached to the project and that have a title containing the search parameter. These projects will be displayed in a table for the search view
             viewmodel.Projects = await _context.Project
-                                    //.Where(p => p.User == user)
                                     .Where(p => p.Title.Contains(search) && p.User == user)
                                     .ToListAsync();
 
@@ -55,14 +57,17 @@ namespace StudioMetrics.Controllers
         [Authorize]
         public async Task<IActionResult> ProjectsOfStatus(int ? id)
         {
+            // Get the user that is currently logged in
             var user = await GetCurrentUserAsync();
+            // Retrieve all the projects fromthe database that have the current user and include all the client, project type, and status type
             var projects = await _context.Project.Where(p => p.User == user).Include(p => p.Client).Include(p => p.ProjectType).Include(p => p.StatusType).ToListAsync();
 
+            // If the id that is passed in is not null then use the id to filter the projects
+            // Only showing the projects that have a status type id matching the id passed in
             if (id != null)
             {
                 var filteredProjects = projects.Where(p => p.StatusTypeId == id).ToList();
                 return View(filteredProjects);
-                //var filteredProjects = await _context.Project.Where(p => p.StatusTypeId == id).ToListAsync();
             }
             return View(projects); 
         }
@@ -76,6 +81,8 @@ namespace StudioMetrics.Controllers
                 return NotFound();
             }
 
+            // Retrieving the single project from the database that has the matching ProjectId to the id passed in
+            // Include all the information needed for the project model like client, project type etc.
             var project = await _context.Project
                 .Include(p => p.Client)
                 .Include(p => p.ProjectType)
@@ -86,6 +93,7 @@ namespace StudioMetrics.Controllers
                     .ThenInclude(ap => ap.Artist)
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.ProjectId == id);
+
             if (project == null)
             {
                 return NotFound();
@@ -100,18 +108,21 @@ namespace StudioMetrics.Controllers
         {
             var user = await GetCurrentUserAsync();
 
+            // These are retrieving data from the database to populate the dropdown lists
             var projectTypes = await _context.ProjectType.ToListAsync();
             var statusTypes = await _context.StatusType.ToListAsync();
             var clients = await _context.Client.Where(c => c.User == user).ToListAsync();
             var players = await _context.Player.Where(c => c.User == user).ToListAsync();
             var artists = await _context.Artist.Where(c => c.User == user).ToListAsync();
 
+            // Creating lists of SelectListItems to hold the data retrieved above for the ProjectCreateViewModel
             var projectTypeListOptions = new List<SelectListItem>();
             var statusTypeListOptions = new List<SelectListItem>();
             var clientListOptions = new List<SelectListItem>();
             var playerListOptions = new List<SelectListItem>();
             var artistListOptions = new List<SelectListItem>();
 
+            // Do a foreach over the set of data to add each individual list item to their respective list, where the value is the id and the text is the name or type
             foreach (ProjectType pt in projectTypes)
             {
                 projectTypeListOptions.Add(new SelectListItem
@@ -157,8 +168,10 @@ namespace StudioMetrics.Controllers
                 });
             }
 
+            // Create an instance of the ProjectCreateViewModel to add the created list options to
             ProjectCreateViewModel createViewModel = new ProjectCreateViewModel();
 
+            // Insert a select list item in the first position so that the dropdown options have a placeholder for required fields
             projectTypeListOptions.Insert(0, new SelectListItem
             {
                 Text = "Choose a Project Type",
@@ -177,6 +190,7 @@ namespace StudioMetrics.Controllers
                 Value = "0"
             });
 
+            // Set the created lists to the view model
             createViewModel.ProjectTypes = projectTypeListOptions;
             createViewModel.StatusTypes = statusTypeListOptions;
             createViewModel.Clients = clientListOptions;
