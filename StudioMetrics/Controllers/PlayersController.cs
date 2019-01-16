@@ -43,7 +43,7 @@ namespace StudioMetrics.Controllers
                 return NotFound();
             }
 
-            // find the player projects associated with the Player and then attach the Project
+            // find the PlayerProjects associated with the Player and then attach the Project so you have access to that information
             var player = await _context.Player
                 .Include(p => p.User)
                 .Include(p => p.PlayerProjects)
@@ -73,13 +73,16 @@ namespace StudioMetrics.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PlayerId,FirstName,LastName,Instrument,Phone,Email,UserId")] Player player)
         {
+            // Remove the User and UserId so that the ModelState can be Valid
             ModelState.Remove("User");
             ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
+                // Attach the current Users to the created player and add to the database
                 player.User = await GetCurrentUserAsync();
                 player.UserId = player.User.Id;
                 _context.Add(player);
+                // Save the added player to the database
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -116,12 +119,14 @@ namespace StudioMetrics.Controllers
                 return NotFound();
             }
 
+            // Remove the User and UserId so the ModelState can be valid
             ModelState.Remove("User");
             ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Add the current user to the edited player and update that player in the database. Then save the changes.
                     player.User = await GetCurrentUserAsync();
                     player.UserId = player.User.Id;
                     _context.Update(player);
@@ -152,6 +157,7 @@ namespace StudioMetrics.Controllers
                 return NotFound();
             }
 
+            // Retrieve the player from the database with the id matching the one passed in
             var player = await _context.Player
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.PlayerId == id);
@@ -173,7 +179,10 @@ namespace StudioMetrics.Controllers
             Player player = await _context.Player
                 .SingleOrDefaultAsync(p => p.PlayerId == id);
 
+            // Retrieve the PlayerProjects from the database that are associated with the player being deleted
             var playerProjects = await _context.PlayerProject.Where(pp => pp.PlayerId == id).ToListAsync();
+            // If the retrieved PlayerProjects are not null then foreach through the list and remove each PlayerProject from the database.
+            // This is to make sure that when a player is deleted their are no PlayerProjects left over referencing the deleted player.
             if (playerProjects != null)
             {
                 foreach (PlayerProject pp in playerProjects)
@@ -182,6 +191,7 @@ namespace StudioMetrics.Controllers
                 }
             }
 
+            // After having removed all the PlayerProjects associated with the player. Then remove the player from the database
             _context.Player.Remove(player);
 
             await _context.SaveChangesAsync();
