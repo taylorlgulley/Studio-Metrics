@@ -10,12 +10,14 @@ namespace StudioMetrics.Models.ViewModels
     {
         public Project Project { get; set; }
 
+        // Lists for ProjectTypes, StatusTypes, and Clients for dropdown options on the create and edit
         public List<SelectListItem> ProjectTypes { get; set; }
 
         public List<SelectListItem> StatusTypes { get; set; }
 
         public List<SelectListItem> Clients { get; set; }
 
+        // Lists for both Players and Artists to have options as well as the options that were selected. The Selected are to create the joiner tables for the database and highlight those that have already been selected in the edit view
         public List<SelectListItem> AvailablePlayers { get; set; }
 
         public List<int> SelectedPlayers { get; set; }
