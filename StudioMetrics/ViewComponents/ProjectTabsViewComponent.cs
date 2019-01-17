@@ -12,7 +12,9 @@ namespace StudioMetrics.ViewComponents
 {
     public class ProjectTabsViewModel
     {
+        // An ActiveTab property for future use in removing the ternaries in ProjectsOfStatus view
         public string ActiveTab { get; set; }
+        // int properties to hold the counts for projects in each status tab
         public int CountAll { get; set; } = 0;
         public int CountUpcoming { get; set; } = 0;
         public int CountCompleted { get; set; } = 0;
@@ -36,16 +38,19 @@ namespace StudioMetrics.ViewComponents
             // Get the current, authenticated user
             ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
 
+            // Create an instance of the ProjectTabs view model to hold the tab counts
             ProjectTabsViewModel model = new ProjectTabsViewModel();
 
             model.ActiveTab = activeTab;
 
+            // Retrieve all the projects from the database that are associated with the current user
             var projects = await _context.Project
                 .Where(p => p.User == user)
                 .Include(p => p.StatusType)
                 .ToListAsync();
                 ;
-
+            
+            // Setting the projects counts for each tab by counting only projects with that StatusTypeId
             model.CountAll = projects.Count();
             model.CountUpcoming = projects.Where(p => p.StatusTypeId == 1).Count();
             model.CountCompleted = projects.Where(p => p.StatusTypeId == 2).Count();
