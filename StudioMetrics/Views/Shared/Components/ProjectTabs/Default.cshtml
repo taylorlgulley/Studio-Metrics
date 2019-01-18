@@ -3,6 +3,8 @@
 
 <div class="responsiveTabs">
     <ul id="myTab" class="nav nav-tabs" style="margin-bottom: 15px;">
+        @*Each individual tab has a ternary that changes the class to active depending on what value is in the route*@
+        @*Additionally each tab has the project count in the tab name*@
         <li class="@(ViewContext.RouteData.Values["id"].ToString() == "All" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="All">All (@Model.CountAll)</a></li>
         <li class="@(ViewContext.RouteData.Values["id"].ToString() == "1" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="1">Upcoming (@Model.CountUpcoming)</a></li>
         <li class="@(ViewContext.RouteData.Values["id"].ToString() == "2" ? "active" : "")"><a asp-action="ProjectsOfStatus" asp-route-id="2">Completed (@Model.CountCompleted)</a></li>
