@@ -7,8 +7,14 @@ their Projects, Clients, Artists and In-House Players. The Projects tab of the a
 the status of the project allowing the user to easily access their projects and move them as needed.
 
 ## Technologies Used
-* C sharp
+* C #
 * .NET
 * Entity
 * Identity
 * [Canva](https://www.canva.com/) - Design site used to make the Logo
+
+## How to Start
+To run Studio Metrics on your local computer
+1. First you will need to clone or fork this repository
+2. Then you must run a `dotnet restore` from your terminal
+3. After this you must run the migration to set up your database.
