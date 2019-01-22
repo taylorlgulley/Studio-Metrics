@@ -12,6 +12,7 @@ namespace StudioMetrics.Models
 
         }
 
+        // Added this property to retrieve company name to attach to the user for the database
         [Required]
         [Display(Name = "Company Name")]
         public string CompanyName { get; set; }

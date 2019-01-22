@@ -62,7 +62,7 @@
         </dt>
         <dd>
             <ul>
-                @*Loop over the each PlayerProject and show the Title for the associated project*@
+                @*Loop over each PlayerProjects and show the First and Last Name for the associated Player*@
                 @foreach (PlayerProject pp in Model.PlayerProjects)
                 {
                     <li>@pp.Player.FirstName @pp.Player.LastName</li>
@@ -74,7 +74,7 @@
         </dt>
         <dd>
             <ul>
-                @*Loop over the each PlayerProject and show the Title for the associated project*@
+                @*Loop over each ArtistProject and show the Name for the associated Artist*@
                 @foreach (ArtistProject ap in Model.ArtistProjects)
                 {
                     <li>@ap.Artist.Name</li>

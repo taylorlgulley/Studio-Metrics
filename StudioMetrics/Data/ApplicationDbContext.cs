@@ -14,6 +14,7 @@ namespace StudioMetrics.Data
             : base(options)
         {
         }
+        // Set up each DbSet for each model of what will be in the database
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Artist> Artist { get; set; }
         public DbSet<ArtistProject> ArtistProject { get; set; }
@@ -29,7 +30,7 @@ namespace StudioMetrics.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Restrict deletion of related project when PlayerProjects entry is removed
+            // Restrict deletion of related project when PlayerProjects entry is removed, does the same for ArtistProjects, ClientArtists
             // It will restrict deleting a Project until you delete the joiner tables assocaited with it
             modelBuilder.Entity<Project>()
                 .HasMany(p => p.PlayerProjects)
@@ -66,6 +67,7 @@ namespace StudioMetrics.Data
                 .WithOne(l => l.User)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // Creation of the admin user
             ApplicationUser user = new ApplicationUser
             {
                 CompanyName = "admin",
@@ -81,6 +83,7 @@ namespace StudioMetrics.Data
             user.PasswordHash = passwordHash.HashPassword(user, "Admin8*");
             modelBuilder.Entity<ApplicationUser>().HasData(user);
 
+            // The following sections are seeding the database with base data
             modelBuilder.Entity<ProjectType>().HasData(
                 new ProjectType()
                 {

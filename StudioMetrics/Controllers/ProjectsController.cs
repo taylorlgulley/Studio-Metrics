@@ -30,12 +30,14 @@ namespace StudioMetrics.Controllers
         [Authorize]
         public async Task<IActionResult> Search(string search)
         {
+            // Creating an instance of the view model for the search feature
             ProjectSearchViewModel viewmodel = new ProjectSearchViewModel();
-
+            //Retrieving the user that is currently logged in
             var user = await GetCurrentUserAsync();
+            // Setting the string from the search bar as the Search property in the view model for the search view
             viewmodel.Search = search;
+            // Retrieving all the projects from the database that have the current user attached to the project and that have a title containing the search parameter. These projects will be displayed in a table for the search view
             viewmodel.Projects = await _context.Project
-                                    //.Where(p => p.User == user)
                                     .Where(p => p.Title.Contains(search) && p.User == user)
                                     .ToListAsync();
 
@@ -55,14 +57,17 @@ namespace StudioMetrics.Controllers
         [Authorize]
         public async Task<IActionResult> ProjectsOfStatus(int ? id)
         {
+            // Get the user that is currently logged in
             var user = await GetCurrentUserAsync();
+            // Retrieve all the projects fromthe database that have the current user and include all the client, project type, and status type
             var projects = await _context.Project.Where(p => p.User == user).Include(p => p.Client).Include(p => p.ProjectType).Include(p => p.StatusType).ToListAsync();
 
+            // If the id that is passed in is not null then use the id to filter the projects
+            // Only showing the projects that have a status type id matching the id passed in
             if (id != null)
             {
                 var filteredProjects = projects.Where(p => p.StatusTypeId == id).ToList();
                 return View(filteredProjects);
-                //var filteredProjects = await _context.Project.Where(p => p.StatusTypeId == id).ToListAsync();
             }
             return View(projects); 
         }
@@ -76,6 +81,8 @@ namespace StudioMetrics.Controllers
                 return NotFound();
             }
 
+            // Retrieving the single project from the database that has the matching ProjectId to the id passed in
+            // Include all the information needed for the project model like client, project type etc.
             var project = await _context.Project
                 .Include(p => p.Client)
                 .Include(p => p.ProjectType)
@@ -86,6 +93,7 @@ namespace StudioMetrics.Controllers
                     .ThenInclude(ap => ap.Artist)
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.ProjectId == id);
+
             if (project == null)
             {
                 return NotFound();
@@ -100,18 +108,21 @@ namespace StudioMetrics.Controllers
         {
             var user = await GetCurrentUserAsync();
 
+            // These are retrieving data from the database to populate the dropdown lists
             var projectTypes = await _context.ProjectType.ToListAsync();
             var statusTypes = await _context.StatusType.ToListAsync();
             var clients = await _context.Client.Where(c => c.User == user).ToListAsync();
             var players = await _context.Player.Where(c => c.User == user).ToListAsync();
             var artists = await _context.Artist.Where(c => c.User == user).ToListAsync();
 
+            // Creating lists of SelectListItems to hold the data retrieved above for the ProjectCreateViewModel
             var projectTypeListOptions = new List<SelectListItem>();
             var statusTypeListOptions = new List<SelectListItem>();
             var clientListOptions = new List<SelectListItem>();
             var playerListOptions = new List<SelectListItem>();
             var artistListOptions = new List<SelectListItem>();
 
+            // Do a foreach over the set of data to add each individual list item to their respective list, where the value is the id and the text is the name or type
             foreach (ProjectType pt in projectTypes)
             {
                 projectTypeListOptions.Add(new SelectListItem
@@ -157,8 +168,10 @@ namespace StudioMetrics.Controllers
                 });
             }
 
+            // Create an instance of the ProjectCreateViewModel to add the created list options to
             ProjectCreateViewModel createViewModel = new ProjectCreateViewModel();
 
+            // Insert a select list item in the first position so that the dropdown options have a placeholder for required fields
             projectTypeListOptions.Insert(0, new SelectListItem
             {
                 Text = "Choose a Project Type",
@@ -177,6 +190,7 @@ namespace StudioMetrics.Controllers
                 Value = "0"
             });
 
+            // Set the created lists to the view model
             createViewModel.ProjectTypes = projectTypeListOptions;
             createViewModel.StatusTypes = statusTypeListOptions;
             createViewModel.Clients = clientListOptions;
@@ -194,14 +208,17 @@ namespace StudioMetrics.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProjectCreateViewModel createProject)
         {
+            // Must remove the User and User Id from the Project for the Model State to be valid (these may have been placeholder values)
             ModelState.Remove("Project.User");
             ModelState.Remove("Project.UserId");
             if (ModelState.IsValid)
             {
+                // Add the current User and UserId to the project
                 createProject.Project.User = await GetCurrentUserAsync();
                 createProject.Project.UserId = createProject.Project.User.Id;
+                // Add the newly created project to the database
                 _context.Add(createProject.Project);
-                // A foreach looping through the SelectedPlayers to create the instances of the PlayerProjects for every one in the list. Then adding them to the database. The foreach works because each entry in the list is an int representing the playerId then it takes the project Id from the created project in the model to make the StudentExercise. Needs to be in an if statement so a person can create a project and not assign them an project.
+                // A foreach looping through the SelectedPlayers to create the instances of the PlayerProjects for every one in the list. Then adding them to the database. The foreach works because each entry in the list is an int representing the playerId then it takes the project Id from the created project in the model to make the PlayerProject. Needs to be in an if statement so a person can create a project and not assign players to a project. Then this same thing is done for the SelectedArtists
                 if (createProject.SelectedPlayers != null)
                 {
                     foreach (int playerId in createProject.SelectedPlayers)
@@ -211,6 +228,7 @@ namespace StudioMetrics.Controllers
                             PlayerId = playerId,
                             ProjectId = createProject.Project.ProjectId
                         };
+                        // Add each individual Player Project to the database
                         _context.Add(newPP);
                     }
                 }
@@ -226,10 +244,13 @@ namespace StudioMetrics.Controllers
                         _context.Add(newAP);
                     }
                 }
+                // Save all the changes to the database. The additions to the database will not completed until they are saved. This is similar to git like adding changes to staging before making a commit.
                 await _context.SaveChangesAsync();
+                // Redirect to the projects being filtered to show only the the Current project.
                 return RedirectToAction("ProjectsofStatus", new { id = 3 });
             }
 
+            // All of this logic is adding the list options back to the create view model so that if the model state is not valid it will return to the create view and maintain the lists. If this is not done when it returns to the view the lists will be empty because the lists are not being held. This logic comes from the get portion of the create.
             var user = await GetCurrentUserAsync();
 
             var projectTypes = await _context.ProjectType.ToListAsync();
@@ -325,6 +346,7 @@ namespace StudioMetrics.Controllers
                 return NotFound();
             }
 
+            // Find the project in the database that has the passed in id as the primary key for the Project
             var project = await _context.Project.FindAsync(id);
             if (project == null)
             {
@@ -332,6 +354,7 @@ namespace StudioMetrics.Controllers
             }
             var user = await GetCurrentUserAsync();
 
+            // Gather the data from the database to populate the lists to be added to the edit view model
             var projectTypes = await _context.ProjectType.ToListAsync();
             var statusTypes = await _context.StatusType.ToListAsync();
             var clients = await _context.Client.Where(c => c.User == user).ToListAsync();
@@ -340,6 +363,7 @@ namespace StudioMetrics.Controllers
             var playerProjects = await _context.PlayerProject.Where(c => c.ProjectId == id).ToListAsync();
             var artistProjects = await _context.ArtistProject.Where(c => c.ProjectId == id).ToListAsync();
 
+            // Create lists to be filled the information obtained above
             var projectTypeListOptions = new List<SelectListItem>();
             var statusTypeListOptions = new List<SelectListItem>();
             var clientListOptions = new List<SelectListItem>();
@@ -348,6 +372,7 @@ namespace StudioMetrics.Controllers
             var playerIds = new List<int>();
             var artistIds = new List<int>();
 
+            // Do a foreach over the set of data to add each individual list item to their respective list, where the value is the id and the text is the name or type
             foreach (ProjectType pt in projectTypes)
             {
                 projectTypeListOptions.Add(new SelectListItem
@@ -393,6 +418,7 @@ namespace StudioMetrics.Controllers
                 });
             }
 
+            // These fill player and artist id lists 
             foreach (PlayerProject pp in playerProjects)
             {
                 playerIds.Add(pp.PlayerId);
@@ -403,12 +429,14 @@ namespace StudioMetrics.Controllers
                 artistIds.Add(ap.ArtistId);
             }
 
+            // Set the lists of options to the project edit view model
             editProject.ProjectTypes = projectTypeListOptions;
             editProject.StatusTypes = statusTypeListOptions;
             editProject.Clients = clientListOptions;
             editProject.AvailablePlayers = playerListOptions;
             editProject.AvailableArtists = artistListOptions;
             editProject.Project = project;
+            // These ids will show the players and artists that are already selected as highlighted in the edit view
             editProject.SelectedPlayers = playerIds;
             editProject.SelectedArtists = artistIds;
 
@@ -432,7 +460,7 @@ namespace StudioMetrics.Controllers
             ModelState.Remove("Project.UserId");
             if (ModelState.IsValid)
             {
-                // Delete joiner tables
+                // Delete the joiner tables before the edit so that we can add the new instances without duplicates
                 var playerProjects = await _context.PlayerProject.Where(pp => pp.ProjectId == id).ToListAsync();
                 if (playerProjects != null)
                 {
@@ -453,7 +481,7 @@ namespace StudioMetrics.Controllers
                 {
                     editProject.Project.User = await GetCurrentUserAsync();
                     editProject.Project.UserId = editProject.Project.User.Id;
-                    // Add the new joiner tables if their are any
+                    // Add the new joiner tables to the database if there are any
                     if (editProject.SelectedPlayers != null)
                     {
                         foreach (int playerId in editProject.SelectedPlayers)
@@ -478,6 +506,7 @@ namespace StudioMetrics.Controllers
                             _context.Add(newAP);
                         }
                     }
+                    // Update the database with the new edited project
                     _context.Update(editProject.Project);
                     await _context.SaveChangesAsync();
                 }
@@ -493,7 +522,7 @@ namespace StudioMetrics.Controllers
                     }
                 }
                 return RedirectToAction("ProjectsofStatus", new { id = 3 });
-                // Add logic to get the dropdown items and multiselect items
+                // Add logic to get the dropdown items and multiselect items. Not Sure if I need this.
             }
             return View(editProject);
         }
@@ -507,6 +536,7 @@ namespace StudioMetrics.Controllers
                 return NotFound();
             }
 
+            // Get the single project from the database that has the passed in id as the ProjectId
             var project = await _context.Project
                 .Include(p => p.Client)
                 .Include(p => p.ProjectType)
@@ -527,6 +557,7 @@ namespace StudioMetrics.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // Remove the joiner tables for both the player and artist. Foreach over them to remove each individual playerproject or artistproject
             var playerProjects = await _context.PlayerProject.Where(pp => pp.ProjectId == id).ToListAsync();
             if (playerProjects != null)
             {
@@ -544,8 +575,10 @@ namespace StudioMetrics.Controllers
                 }
             }
             var project = await _context.Project.FindAsync(id);
+            // Remove the project from the database and save the changes
             _context.Project.Remove(project);
             await _context.SaveChangesAsync();
+            // Redirect to the projects only showing the projects with the status current
             return RedirectToAction("ProjectsofStatus", new { id = 3 });
         }
 
