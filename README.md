@@ -16,5 +16,8 @@ the status of the project allowing the user to easily access their projects and 
 ## How to Start
 To run Studio Metrics on your local computer
 1. First you will need to clone or fork this repository
-2. Then you must run a `dotnet restore` from your terminal
-3. After this you must run the migration to set up your database.
+2. Then you must run a `dotnet restore` from your terminal within the project folder
+3. After this you must run `Update-Database` in the Package Manager Console
+
+## Data Structure
+
