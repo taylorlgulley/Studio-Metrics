@@ -58,6 +58,12 @@
             @Html.DisplayFor(model => model.Client.Name)
         </dd>
         <dt>
+            Revenue
+        </dt>
+        <dd>
+            $ @(Model.TimeTable * Model.Payrate)
+        </dd>
+        <dt>
             Players on this Project
         </dt>
         <dd>
