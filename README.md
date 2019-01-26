@@ -18,3 +18,6 @@ To run Studio Metrics on your local computer
 1. First you will need to clone or fork this repository
 2. Then you must run a `dotnet restore` from your terminal
 3. After this you must run the migration to set up your database.
+
+## Data Structure
+![ERD] (./StudioMetrics/wwwroot/images/Backend-Diagram.png)
