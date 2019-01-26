@@ -20,4 +20,4 @@ To run Studio Metrics on your local computer
 3. After this you must run `Update-Database` in the Package Manager Console
 
 ## Data Structure
-
+![ERD](StudioMetrics/wwwroot/images/Backend-Diagram.png)
