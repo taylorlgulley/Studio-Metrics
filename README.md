@@ -20,4 +20,3 @@ To run Studio Metrics on your local computer
 3. After this you must run the migration to set up your database.
 
 ## Data Structure
-![ERD] (./StudioMetrics/wwwroot/images/Backend-Diagram.png)
