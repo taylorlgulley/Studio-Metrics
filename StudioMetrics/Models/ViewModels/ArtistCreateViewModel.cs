@@ -17,3 +17,5 @@ namespace StudioMetrics.Models.ViewModels
         public List<int> SelectedClients { get; set; }
     }
 }
+// Make this into a reusable view model for both create and edit
+// Change the projects controller to use new view model
