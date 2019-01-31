@@ -83,7 +83,7 @@ namespace StudioMetrics.Controllers
             }
 
             // Create an instance of the ArtistCreateViewModel to add the list options to 
-            ArtistCreateViewModel createViewModel = new ArtistCreateViewModel();
+            ArtistCreateEditViewModel createViewModel = new ArtistCreateEditViewModel();
             
             // Set the client list options ot the AvailableClients on the view model
             createViewModel.AvailableClients = clientListOptions;
@@ -97,7 +97,7 @@ namespace StudioMetrics.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ArtistCreateViewModel createArtist)
+        public async Task<IActionResult> Create(ArtistCreateEditViewModel createArtist)
         {
             // Remove the User and UserId so the ModelState can be valid
             ModelState.Remove("Artist.User");
@@ -130,7 +130,7 @@ namespace StudioMetrics.Controllers
 
         // GET: Artists/Edit/5
         [Authorize]
-        public async Task<IActionResult> Edit(int? id, ArtistEditViewModel editViewModel)
+        public async Task<IActionResult> Edit(int? id, ArtistCreateEditViewModel editViewModel)
         {
             if (id == null)
             {
@@ -183,7 +183,7 @@ namespace StudioMetrics.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ArtistEditViewModel editArtist)
+        public async Task<IActionResult> Edit(int id, ArtistCreateEditViewModel editArtist)
         {
             if (id != editArtist.Artist.ArtistId)
             {
