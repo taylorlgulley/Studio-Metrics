@@ -169,7 +169,7 @@ namespace StudioMetrics.Controllers
             }
 
             // Create an instance of the ProjectCreateViewModel to add the created list options to
-            ProjectCreateViewModel createViewModel = new ProjectCreateViewModel();
+            ProjectCreateEditViewModel createViewModel = new ProjectCreateEditViewModel();
 
             // Insert a select list item in the first position so that the dropdown options have a placeholder for required fields
             projectTypeListOptions.Insert(0, new SelectListItem
@@ -206,7 +206,7 @@ namespace StudioMetrics.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProjectCreateViewModel createProject)
+        public async Task<IActionResult> Create(ProjectCreateEditViewModel createProject)
         {
             // Must remove the User and User Id from the Project for the Model State to be valid (these may have been placeholder values)
             ModelState.Remove("Project.User");
@@ -339,7 +339,7 @@ namespace StudioMetrics.Controllers
 
         // GET: Projects/Edit/5
         [Authorize]
-        public async Task<IActionResult> Edit(int? id, ProjectEditViewModel editProject)
+        public async Task<IActionResult> Edit(int? id, ProjectCreateEditViewModel editProject)
         {
             if (id == null)
             {
@@ -449,7 +449,7 @@ namespace StudioMetrics.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProjectEditViewModel editProject)
+        public async Task<IActionResult> Edit(int id, ProjectCreateEditViewModel editProject)
         {
             if (id != editProject.Project.ProjectId)
             {

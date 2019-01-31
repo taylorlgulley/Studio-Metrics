@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StudioMetrics.Models.ViewModels
 {
-    public class ProjectCreateViewModel
+    public class ProjectCreateEditViewModel
     {
         public Project Project { get; set; }
 
