@@ -9,12 +9,12 @@
 <form>
     <button asp-action="Create" type="submit" class="btn btn-create btn-default">Create New Player</button>
 </form>
+<br />
 
 @*An if statement to tell the user to create players if they haven't already*@
 @if (Model.Count() == 0)
 {
-    <br>
-    <p>No Players have been created yet</p>
+    <p>No Players have been created yet. Please create Players to attach to your Projects.</p>
 }
 else
 {
