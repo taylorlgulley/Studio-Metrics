@@ -7,7 +7,7 @@
 
 <h2>Projects</h2>
 
-@*Add a conditional if statement for if they have not created any projects*@
+@*Add a conditional if statement for if they have not created any projects and maybe add an if statement the create view so that they can only create a project if they have created Clients first*@
 <form>
     <button asp-action="Create" type="submit" class="btn btn-create btn-default">Create New</button>
 </form>
@@ -17,72 +17,79 @@
 @*This is the view component for the tab system filtering the projects list by status type*@
 <vc:project-tabs active-tab="All"></vc:project-tabs>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                Project Type
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Payrate) Per Day
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TimeTable)
-            </th>
-            <th>
-                Start Date
-            </th>
-            <th>
-                Status
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Client)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if (Model.Count() == 0)
+{
+    <p>No Projects have been created yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProjectType.Type)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Payrate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeTable) Days
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StatusType.Type)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Client.Name)
-                </td>
-                <td>
-                    <form>
-                        <button asp-action="Edit" asp-route-id="@item.ProjectId" type="submit" class="btn btn-edit btn-default">Edit</button> |
-                        <button asp-action="Details" asp-route-id="@item.ProjectId" type="submit" class="btn btn-details btn-default">Details</button> |
-                        <button asp-action="Delete" asp-route-id="@item.ProjectId" type="submit" class="btn btn-delete btn-default">Delete</button>
-                    </form>
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    Project Type
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Payrate) Per Day
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TimeTable)
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Client)
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProjectType.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Payrate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeTable) Days
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StatusType.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client.Name)
+                    </td>
+                    <td>
+                        <form>
+                            <button asp-action="Edit" asp-route-id="@item.ProjectId" type="submit" class="btn btn-edit btn-default">Edit</button> |
+                            <button asp-action="Details" asp-route-id="@item.ProjectId" type="submit" class="btn btn-details btn-default">Details</button> |
+                            <button asp-action="Delete" asp-route-id="@item.ProjectId" type="submit" class="btn btn-delete btn-default">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
