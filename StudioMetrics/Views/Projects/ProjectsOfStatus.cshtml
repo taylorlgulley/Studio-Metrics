@@ -17,6 +17,7 @@
 @*This is the view component for the tab system filtering the projects list by status type*@
 <vc:project-tabs active-tab="All"></vc:project-tabs>
 
+@*An if statement to tell the user to make projects if hey haven't already*@
 @if (Model.Count() == 0)
 {
     <p>No Projects have been created yet.</p>
