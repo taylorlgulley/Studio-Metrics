@@ -79,11 +79,13 @@ namespace StudioMetrics.Data
                 LockoutEnabled = false,
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
+            // This is the creation of the passward and hashing it
             var passwordHash = new PasswordHasher<ApplicationUser>();
             user.PasswordHash = passwordHash.HashPassword(user, "Admin8*");
             modelBuilder.Entity<ApplicationUser>().HasData(user);
 
-            // The following sections are seeding the database with base data
+            // The following sections are seeding the database with base data for the Admin user to test the application
+            // Additionally data to be present for every used was created like Status Types
             modelBuilder.Entity<ProjectType>().HasData(
                 new ProjectType()
                 {
