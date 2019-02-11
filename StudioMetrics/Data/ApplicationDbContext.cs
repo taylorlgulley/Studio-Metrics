@@ -32,6 +32,7 @@ namespace StudioMetrics.Data
 
             // Restrict deletion of related project when PlayerProjects entry is removed, does the same for ArtistProjects, ClientArtists
             // It will restrict deleting a Project until you delete the joiner tables assocaited with it
+            // These restrictions are also applied to Players, Artists and Clients
             modelBuilder.Entity<Project>()
                 .HasMany(p => p.PlayerProjects)
                 .WithOne(l => l.Project)
