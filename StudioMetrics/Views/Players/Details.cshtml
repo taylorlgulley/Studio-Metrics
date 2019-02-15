@@ -45,10 +45,12 @@
         <dd>
             <ul>
                 @*Loop over the each PlayerProjects and show the Title for the associated project*@
-             @foreach (PlayerProject p in Model.PlayerProjects)
-             {
-                <li>@p.Project.Title</li>
-             }
+                @foreach (PlayerProject p in Model.PlayerProjects)
+                {
+                    <li>
+                        <a asp-controller="Projects" asp-action="Details" asp-route-id="@p.Project.ProjectId">@p.Project.Title</a>
+                    </li>
+                }
             </ul>
         </dd>
     </dl>
