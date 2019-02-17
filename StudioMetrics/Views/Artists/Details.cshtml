@@ -20,7 +20,7 @@
         </dt>
         <dd>
             <ul>
-                @*Loop over each ClientArtist and show the Name for the associated client*@
+                @*Loop over each ClientArtist and show the Name for the associated client as links to their details page*@
                 @foreach (ClientArtist ca in Model.ClientArtists)
                 {
                     <li>@ca.Client.Name</li>
@@ -35,7 +35,7 @@
         </dt>
         <dd>
             <ul>
-                @*Loop over each ArtistProject and show the Title for the associated project*@
+                @*Loop over each ArtistProject and show the Title for the associated project as links to their details page*@
                 @foreach (ArtistProject ap in Model.ArtistProjects)
                 {
                     <li>
