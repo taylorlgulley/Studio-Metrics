@@ -35,7 +35,9 @@
                 @*Loop over each ArtistProject and show the Title for the associated project*@
                 @foreach (ArtistProject ap in Model.ArtistProjects)
                 {
-                    <li>@ap.Project.Title</li>
+                    <li>
+                        <a asp-controller="Projects" asp-action="Details" asp-route-id="@ap.Project.ProjectId">@ap.Project.Title</a>
+                    </li>
                 }
             </ul>
         </dd>
