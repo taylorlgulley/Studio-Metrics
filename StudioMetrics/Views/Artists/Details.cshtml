@@ -24,6 +24,9 @@
                 @foreach (ClientArtist ca in Model.ClientArtists)
                 {
                     <li>@ca.Client.Name</li>
+                    <li>
+                        <a asp-controller="Clients" asp-action="Details" asp-route-id="@ca.Client.ClientId">@ca.Client.Name</a>
+                    </li>
                 }
             </ul>
         </dd>
