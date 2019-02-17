@@ -23,7 +23,6 @@
                 @*Loop over each ClientArtist and show the Name for the associated client as links to their details page*@
                 @foreach (ClientArtist ca in Model.ClientArtists)
                 {
-                    <li>@ca.Client.Name</li>
                     <li>
                         <a asp-controller="Clients" asp-action="Details" asp-route-id="@ca.Client.ClientId">@ca.Client.Name</a>
                     </li>
