@@ -32,10 +32,9 @@
         </dt>
         <dd>
             <ul>
-                @*Loop over each ClientArtist and show the Artist Name associated with the client*@
+                @*Loop over each ClientArtist and show the Artist Name associated with the client as a link to the details page*@
                 @foreach (ClientArtist ca in Model.ClientArtists)
                 {
-                    <li>@ca.Artist.Name</li>
                     <li>
                         <a asp-controller="Artists" asp-action="Details" asp-route-id="@ca.Artist.ArtistId">@ca.Artist.Name</a>
                     </li>
@@ -47,10 +46,9 @@
         </dt>
         <dd>
             <ul>
-                @*Loop over the client's projects and show the Title for the associated project*@
+                @*Loop over the client's projects and show the Title for the associated project as a link to the details page*@
                 @foreach (Project p in Model.Projects)
                 {
-                    <li>@p.Title</li>
                     <li>
                         <a asp-controller="Projects" asp-action="Details" asp-route-id="@p.ProjectId">@p.Title</a>
                     </li>
