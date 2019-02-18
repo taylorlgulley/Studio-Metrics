@@ -48,6 +48,9 @@
                 @foreach (Project p in Model.Projects)
                 {
                     <li>@p.Title</li>
+                    <li>
+                        <a asp-controller="Projects" asp-action="Details" asp-route-id="@p.ProjectId">@p.Title</a>
+                    </li>
                 }
             </ul>
         </dd>
