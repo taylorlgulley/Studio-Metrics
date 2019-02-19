@@ -72,6 +72,9 @@
                 @foreach (PlayerProject pp in Model.PlayerProjects)
                 {
                     <li>@pp.Player.FirstName @pp.Player.LastName</li>
+                    <li>
+                        <a asp-controller="Players" asp-action="Details" asp-route-id="@pp.Player.PlayerId">@pp.Player.FirstName @pp.Player.LastName</a>
+                    </li>
                 }
             </ul>
         </dd>
