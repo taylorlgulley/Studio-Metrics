@@ -71,7 +71,6 @@
                 @*Loop over each PlayerProjects and show the First and Last Name for the associated Player*@
                 @foreach (PlayerProject pp in Model.PlayerProjects)
                 {
-                    <li>@pp.Player.FirstName @pp.Player.LastName</li>
                     <li>
                         <a asp-controller="Players" asp-action="Details" asp-route-id="@pp.Player.PlayerId">@pp.Player.FirstName @pp.Player.LastName</a>
                     </li>
@@ -86,7 +85,6 @@
                 @*Loop over each ArtistProject and show the Name for the associated Artist*@
                 @foreach (ArtistProject ap in Model.ArtistProjects)
                 {
-                    <li>@ap.Artist.Name</li>
                     <li>
                         <a asp-controller="Artists" asp-action="Details" asp-route-id="@ap.Artist.ArtistId">@ap.Artist.Name</a>
                     </li>
