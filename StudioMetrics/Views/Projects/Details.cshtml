@@ -87,6 +87,9 @@
                 @foreach (ArtistProject ap in Model.ArtistProjects)
                 {
                     <li>@ap.Artist.Name</li>
+                    <li>
+                        <a asp-controller="Artists" asp-action="Details" asp-route-id="@ap.Artist.ArtistId">@ap.Artist.Name</a>
+                    </li>
                 }
             </ul>
         </dd>
