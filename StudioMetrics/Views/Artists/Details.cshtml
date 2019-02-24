@@ -29,21 +29,33 @@
                 }
             </ul>
         </dd>
-        @*Add a conditional redner so that if the Artist has no projects then it will render a comment saying that they have no projects*@
-        <dt>
-            Their Projects
-        </dt>
-        <dd>
-            <ul>
-                @*Loop over each ArtistProject and show the Title for the associated project as links to their details page*@
-                @foreach (ArtistProject ap in Model.ArtistProjects)
-                {
-                    <li>
-                        <a asp-controller="Projects" asp-action="Details" asp-route-id="@ap.Project.ProjectId">@ap.Project.Title</a>
-                    </li>
-                }
-            </ul>
-        </dd>
+        @*Added a conditional redner so that if the Artist has no projects then it will render a comment saying that they have no projects*@
+        @if (Model.ArtistProjects.Count() != 0)
+        {
+            <dt>
+                Their Projects
+            </dt>
+            <dd>
+                <ul>
+                    @*Loop over each ArtistProject and show the Title for the associated project as links to their details page*@
+                    @foreach (ArtistProject ap in Model.ArtistProjects)
+                    {
+                        <li>
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@ap.Project.ProjectId">@ap.Project.Title</a>
+                        </li>
+                    }
+                </ul>
+            </dd>
+        }
+        else
+        {
+            <dt>
+                Their Projects
+            </dt>
+            <dd>
+                <p>There are currently no projects for this artist</p>
+            </dd>
+        }
     </dl>
 </div>
 <div>
