@@ -18,6 +18,7 @@
         <dt>
             Their Clients
         </dt>
+        @*Added a conditional render so that if the Artist has no Clients it will tell them*@
         @if (Model.ClientArtists.Count() != 0)
         {
             <dd>
