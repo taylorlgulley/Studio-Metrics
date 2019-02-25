@@ -42,6 +42,7 @@
         <dt>
             Projects they played on
         </dt>
+        @*A conditional render to show a comment if the player doesn't have any projects*@
         @if (Model.PlayerProjects.Count() != 0)
         {
             <dd>
