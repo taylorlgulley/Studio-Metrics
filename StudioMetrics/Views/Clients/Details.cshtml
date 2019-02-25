@@ -30,6 +30,7 @@
         <dt>
             Associated Artists
         </dt>
+        @*Added a conditional render so that if the Client has no Artists associated it will say so instead of being blank*@
         @if (Model.ClientArtists.Count() != 0)
         {
             <dd>
