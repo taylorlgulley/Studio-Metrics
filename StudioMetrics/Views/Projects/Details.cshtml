@@ -66,17 +66,26 @@
         <dt>
             Players on this Project
         </dt>
-        <dd>
-            <ul>
-                @*Loop over each PlayerProjects and show the First and Last Name for the associated Player as links to the details page*@
-                @foreach (PlayerProject pp in Model.PlayerProjects)
-                {
-                    <li>
-                        <a asp-controller="Players" asp-action="Details" asp-route-id="@pp.Player.PlayerId">@pp.Player.FirstName @pp.Player.LastName</a>
-                    </li>
-                }
-            </ul>
-        </dd>
+        @if (Model.PlayerProjects.Count() != 0)
+        {
+            <dd>
+                <ul>
+                    @*Loop over each PlayerProjects and show the First and Last Name for the associated Player as links to the details page*@
+                    @foreach (PlayerProject pp in Model.PlayerProjects)
+                    {
+                        <li>
+                            <a asp-controller="Players" asp-action="Details" asp-route-id="@pp.Player.PlayerId">@pp.Player.FirstName @pp.Player.LastName</a>
+                        </li>
+                    }
+                </ul>
+            </dd>
+        }
+        else
+        {
+            <dd>
+                <p>There are no Players associated with this project</p>
+            </dd>
+        }
         <dt>
             Associated Artists
         </dt>
