@@ -90,6 +90,7 @@
         <dt>
             Associated Artists
         </dt>
+        @*An if statement to render a comment if no artists are associated with the project*@
         @if (Model.ArtistProjects.Count() != 0)
         {
             <dd>
