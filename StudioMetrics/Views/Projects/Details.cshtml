@@ -90,17 +90,26 @@
         <dt>
             Associated Artists
         </dt>
-        <dd>
-            <ul>
-                @*Loop over each ArtistProject and show the Name for the associated Artist as links to the details page*@
-                @foreach (ArtistProject ap in Model.ArtistProjects)
-                {
-                    <li>
-                        <a asp-controller="Artists" asp-action="Details" asp-route-id="@ap.Artist.ArtistId">@ap.Artist.Name</a>
-                    </li>
-                }
-            </ul>
-        </dd>
+        @if (Model.ArtistProjects.Count() != 0)
+        {
+            <dd>
+                <ul>
+                    @*Loop over each ArtistProject and show the Name for the associated Artist as links to the details page*@
+                    @foreach (ArtistProject ap in Model.ArtistProjects)
+                    {
+                        <li>
+                            <a asp-controller="Artists" asp-action="Details" asp-route-id="@ap.Artist.ArtistId">@ap.Artist.Name</a>
+                        </li>
+                    }
+                </ul>
+            </dd>
+        }
+        else
+        {
+            <dd>
+                <p>There are no Artists associated with this project</p>
+            </dd>
+        }
     </dl>
 </div>
 <div>
