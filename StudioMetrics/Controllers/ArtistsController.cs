@@ -13,6 +13,7 @@ using StudioMetrics.Models.ViewModels;
 
 namespace StudioMetrics.Controllers
 {
+    // Inheriting the Controller class
     public class ArtistsController : Controller
     {
         private readonly ApplicationDbContext _context;

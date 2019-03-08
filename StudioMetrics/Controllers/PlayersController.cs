@@ -12,6 +12,7 @@ using StudioMetrics.Models;
 
 namespace StudioMetrics.Controllers
 {
+    //Inheriting the Controller class
     public class PlayersController : Controller
     {
         private readonly ApplicationDbContext _context;

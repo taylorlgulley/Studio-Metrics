@@ -13,6 +13,7 @@ using StudioMetrics.Models.ViewModels;
 
 namespace StudioMetrics.Controllers
 {
+    // Inherting the Controller class
     public class ClientsController : Controller
     {
         private readonly ApplicationDbContext _context;
