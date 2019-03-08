@@ -25,6 +25,7 @@ namespace StudioMetrics.Controllers
             _context = context;
         }
 
+        // Retrieving the current user
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Search Projects
