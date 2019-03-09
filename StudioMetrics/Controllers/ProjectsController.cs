@@ -19,6 +19,7 @@ namespace StudioMetrics.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        // Dependency Injection for the ApplicationDbContext and UserManager
         public ProjectsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
