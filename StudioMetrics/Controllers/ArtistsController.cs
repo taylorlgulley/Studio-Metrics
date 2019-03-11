@@ -19,12 +19,14 @@ namespace StudioMetrics.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        // Dependency Injection for the ApplicationDbContext and UserManager
         public ArtistsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _context = context;
         }
 
+        // Retrieving the current user
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Artists
