@@ -32,6 +32,7 @@ namespace StudioMetrics.Data
 
             // Restrict deletion of related project when PlayerProjects entry is removed, does the same for ArtistProjects, ClientArtists
             // It will restrict deleting a Project until you delete the joiner tables assocaited with it
+            // These restrictions are also applied to Players, Artists and Clients
             modelBuilder.Entity<Project>()
                 .HasMany(p => p.PlayerProjects)
                 .WithOne(l => l.Project)
@@ -79,11 +80,13 @@ namespace StudioMetrics.Data
                 LockoutEnabled = false,
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
+            // This is the creation of the passward and hashing it
             var passwordHash = new PasswordHasher<ApplicationUser>();
             user.PasswordHash = passwordHash.HashPassword(user, "Admin8*");
             modelBuilder.Entity<ApplicationUser>().HasData(user);
 
-            // The following sections are seeding the database with base data
+            // The following sections are seeding the database with base data for the Admin user to test the application
+            // Additionally data to be present for every used was created like Status Types
             modelBuilder.Entity<ProjectType>().HasData(
                 new ProjectType()
                 {

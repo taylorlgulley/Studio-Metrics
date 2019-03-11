@@ -55,7 +55,7 @@
             @Html.DisplayNameFor(model => model.Client)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Client.Name)
+            <a asp-controller="Clients" asp-action="Details" asp-route-id="@Model.Client.ClientId">@Model.Client.Name</a>
         </dd>
         <dt>
             Revenue
@@ -66,27 +66,51 @@
         <dt>
             Players on this Project
         </dt>
-        <dd>
-            <ul>
-                @*Loop over each PlayerProjects and show the First and Last Name for the associated Player*@
-                @foreach (PlayerProject pp in Model.PlayerProjects)
-                {
-                    <li>@pp.Player.FirstName @pp.Player.LastName</li>
-                }
-            </ul>
-        </dd>
+        @*An if statement to render a comment if no players are associated with the project*@
+        @if (Model.PlayerProjects.Count() != 0)
+        {
+            <dd>
+                <ul>
+                    @*Loop over each PlayerProjects and show the First and Last Name for the associated Player as links to the details page*@
+                    @foreach (PlayerProject pp in Model.PlayerProjects)
+                    {
+                        <li>
+                            <a asp-controller="Players" asp-action="Details" asp-route-id="@pp.Player.PlayerId">@pp.Player.FirstName @pp.Player.LastName</a>
+                        </li>
+                    }
+                </ul>
+            </dd>
+        }
+        else
+        {
+            <dd>
+                <p>There are no Players associated with this project</p>
+            </dd>
+        }
         <dt>
             Associated Artists
         </dt>
-        <dd>
-            <ul>
-                @*Loop over each ArtistProject and show the Name for the associated Artist*@
-                @foreach (ArtistProject ap in Model.ArtistProjects)
-                {
-                    <li>@ap.Artist.Name</li>
-                }
-            </ul>
-        </dd>
+        @*An if statement to render a comment if no artists are associated with the project*@
+        @if (Model.ArtistProjects.Count() != 0)
+        {
+            <dd>
+                <ul>
+                    @*Loop over each ArtistProject and show the Name for the associated Artist as links to the details page*@
+                    @foreach (ArtistProject ap in Model.ArtistProjects)
+                    {
+                        <li>
+                            <a asp-controller="Artists" asp-action="Details" asp-route-id="@ap.Artist.ArtistId">@ap.Artist.Name</a>
+                        </li>
+                    }
+                </ul>
+            </dd>
+        }
+        else
+        {
+            <dd>
+                <p>There are no Artists associated with this project</p>
+            </dd>
+        }
     </dl>
 </div>
 <div>

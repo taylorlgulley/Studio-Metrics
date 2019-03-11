@@ -18,27 +18,54 @@
         <dt>
             Their Clients
         </dt>
-        <dd>
-            <ul>
-                @*Loop over each ClientArtist and show the Name for the associated client*@
-                @foreach (ClientArtist ca in Model.ClientArtists)
-                {
-                    <li>@ca.Client.Name</li>
-                }
-            </ul>
-        </dd>
-        <dt>
-            Their Projects
-        </dt>
-        <dd>
-            <ul>
-                @*Loop over each ArtistProject and show the Title for the associated project*@
-                @foreach (ArtistProject ap in Model.ArtistProjects)
-                {
-                    <li>@ap.Project.Title</li>
-                }
-            </ul>
-        </dd>
+        @*Added a conditional render so that if the Artist has no Clients it will tell them*@
+        @if (Model.ClientArtists.Count() != 0)
+        {
+            <dd>
+                <ul>
+                    @*Loop over each ClientArtist and show the Name for the associated client as links to their details page*@
+                    @foreach (ClientArtist ca in Model.ClientArtists)
+                    {
+                        <li>
+                            <a asp-controller="Clients" asp-action="Details" asp-route-id="@ca.Client.ClientId">@ca.Client.Name</a>
+                        </li>
+                    }
+                </ul>
+            </dd>
+        }
+        else
+        {
+            <dd>
+                <p>There are no Clients for this Artist</p>
+            </dd>
+        }
+        @*Added a conditional render so that if the Artist has no projects then it will render a comment saying that they have no projects*@
+        @if (Model.ArtistProjects.Count() != 0)
+        {
+            <dt>
+                Their Projects
+            </dt>
+            <dd>
+                <ul>
+                    @*Loop over each ArtistProject and show the Title for the associated project as links to their details page*@
+                    @foreach (ArtistProject ap in Model.ArtistProjects)
+                    {
+                        <li>
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@ap.Project.ProjectId">@ap.Project.Title</a>
+                        </li>
+                    }
+                </ul>
+            </dd>
+        }
+        else
+        {
+            <dt>
+                Their Projects
+            </dt>
+            <dd>
+                <p>There are currently no projects for this artist</p>
+            </dd>
+        }
     </dl>
 </div>
 <div>

@@ -12,17 +12,20 @@ using StudioMetrics.Models;
 
 namespace StudioMetrics.Controllers
 {
+    //Inheriting the Controller class
     public class PlayersController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        // Dependency Injection for the ApplicationDbContext and UserManager
         public PlayersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _context = context;
         }
 
+        // Retrieved the current user
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Players

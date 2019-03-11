@@ -13,17 +13,20 @@ using StudioMetrics.Models.ViewModels;
 
 namespace StudioMetrics.Controllers
 {
+    // Inheriting the Controller class
     public class ArtistsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        // Dependency Injection for the ApplicationDbContext and UserManager
         public ArtistsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _context = context;
         }
 
+        // Retrieving the current user
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         // GET: Artists
@@ -83,7 +86,7 @@ namespace StudioMetrics.Controllers
             }
 
             // Create an instance of the ArtistCreateViewModel to add the list options to 
-            ArtistCreateViewModel createViewModel = new ArtistCreateViewModel();
+            ArtistCreateEditViewModel createViewModel = new ArtistCreateEditViewModel();
             
             // Set the client list options ot the AvailableClients on the view model
             createViewModel.AvailableClients = clientListOptions;
@@ -97,7 +100,7 @@ namespace StudioMetrics.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ArtistCreateViewModel createArtist)
+        public async Task<IActionResult> Create(ArtistCreateEditViewModel createArtist)
         {
             // Remove the User and UserId so the ModelState can be valid
             ModelState.Remove("Artist.User");
@@ -130,7 +133,7 @@ namespace StudioMetrics.Controllers
 
         // GET: Artists/Edit/5
         [Authorize]
-        public async Task<IActionResult> Edit(int? id, ArtistEditViewModel editViewModel)
+        public async Task<IActionResult> Edit(int? id, ArtistCreateEditViewModel editViewModel)
         {
             if (id == null)
             {
@@ -183,7 +186,7 @@ namespace StudioMetrics.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ArtistEditViewModel editArtist)
+        public async Task<IActionResult> Edit(int id, ArtistCreateEditViewModel editArtist)
         {
             if (id != editArtist.Artist.ArtistId)
             {

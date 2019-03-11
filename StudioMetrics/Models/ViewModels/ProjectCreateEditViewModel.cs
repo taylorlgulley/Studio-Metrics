@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StudioMetrics.Models.ViewModels
 {
-    public class ProjectEditViewModel
+    public class ProjectCreateEditViewModel
     {
         public Project Project { get; set; }
 
@@ -25,6 +25,5 @@ namespace StudioMetrics.Models.ViewModels
         public List<SelectListItem> AvailableArtists { get; set; }
 
         public List<int> SelectedArtists { get; set; }
-
     }
 }

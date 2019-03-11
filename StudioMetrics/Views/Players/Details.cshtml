@@ -42,15 +42,27 @@
         <dt>
             Projects they played on
         </dt>
-        <dd>
-            <ul>
-                @*Loop over the each PlayerProjects and show the Title for the associated project*@
-             @foreach (PlayerProject p in Model.PlayerProjects)
-             {
-                <li>@p.Project.Title</li>
-             }
-            </ul>
-        </dd>
+        @*A conditional render to show a comment if the player doesn't have any projects*@
+        @if (Model.PlayerProjects.Count() != 0)
+        {
+            <dd>
+                <ul>
+                    @*Loop over the each PlayerProjects and show the Title for the associated project as links to their details page*@
+                    @foreach (PlayerProject p in Model.PlayerProjects)
+                    {
+                        <li>
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@p.Project.ProjectId">@p.Project.Title</a>
+                        </li>
+                    }
+                </ul>
+            </dd>
+        }
+        else
+        {
+            <dd>
+                <p>This Player has no Projects</p>
+            </dd>
+        }
     </dl>
 </div>
 <div>
