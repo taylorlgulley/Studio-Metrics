@@ -27,6 +27,7 @@ namespace StudioMetrics.ViewComponents
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        // Using dependency injection to give access to ApplicationDbContext and the UserManager
         public ProjectTabsViewComponent(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
